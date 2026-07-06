@@ -1,0 +1,2377 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NICU Infection Prevention Bundle — Learn · Compete · Audit · RCA</title>
+<style>
+:root{
+  --teal:#0e7c86; --teal-dark:#0a5c64; --teal-light:#e6f4f5;
+  --navy:#1c3144; --ink:#22303c; --muted:#5b6b76;
+  --bg:#f4f7f8; --card:#ffffff; --line:#dfe7e9;
+  --good:#1f8a54; --warn:#c98a12; --bad:#c0392b;
+  --clabsi:#c0392b; --vap:#2563a8; --nec:#b3690a; --hh:#1f8a54; --skin:#a8557a; --milk:#6a4fb0;
+  --radius:14px;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+}
+*{box-sizing:border-box;}
+body{margin:0; background:var(--bg); color:var(--ink); line-height:1.5;}
+h1,h2,h3,h4,h5{color:var(--navy); line-height:1.25;}
+a{color:var(--teal-dark);}
+button{font-family:inherit; cursor:pointer;}
+.hidden{display:none !important;}
+
+header.appbar{
+  background:linear-gradient(135deg,var(--navy),var(--teal-dark));
+  color:#fff; padding:16px 22px; position:sticky; top:0; z-index:50;
+  box-shadow:0 2px 10px rgba(0,0,0,.15);
+}
+.appbar-top{display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:10px;}
+.appbar-title{font-size:1.2rem; font-weight:700; margin:0;}
+.appbar-sub{font-size:.78rem; opacity:.85; margin-top:2px;}
+.appbar-user{font-size:.78rem; opacity:.9; display:flex; align-items:center; gap:8px; flex-wrap:wrap;}
+.appbar-user input, .appbar-user select{border:none; border-radius:6px; padding:4px 8px; font-size:.78rem;}
+.appbar-user input{width:140px;}
+nav.tabs{display:flex; gap:6px; margin-top:12px; flex-wrap:wrap;}
+nav.tabs button{
+  background:rgba(255,255,255,.12); color:#fff; border:1px solid rgba(255,255,255,.25);
+  padding:7px 13px; border-radius:999px; font-size:.82rem; font-weight:600; transition:.15s;
+}
+nav.tabs button:hover{background:rgba(255,255,255,.22);}
+nav.tabs button.active{background:#fff; color:var(--navy);}
+
+main{max-width:1150px; margin:0 auto; padding:20px 16px 60px;}
+.section-title{display:flex; align-items:baseline; gap:10px; margin-bottom:6px;}
+.section-desc{color:var(--muted); margin-top:0; margin-bottom:18px; font-size:.9rem;}
+
+.grid{display:grid; grid-template-columns:repeat(auto-fill,minmax(225px,1fr)); gap:14px;}
+.card{background:var(--card); border:1px solid var(--line); border-radius:var(--radius); padding:14px 16px; box-shadow:0 1px 3px rgba(0,0,0,.04);}
+.card h3{margin:0 0 6px;}
+.topic-card{border-top:5px solid var(--teal); cursor:pointer; transition:transform .12s, box-shadow .12s;}
+.topic-card:hover{transform:translateY(-2px); box-shadow:0 6px 18px rgba(0,0,0,.08);}
+.topic-badge{display:inline-block; font-size:.66rem; font-weight:700; text-transform:uppercase; letter-spacing:.04em; color:#fff; padding:3px 8px; border-radius:6px; margin-bottom:6px;}
+.topic-icon{font-size:1.7rem;}
+.stat-row{display:flex; justify-content:space-between; font-size:.8rem; color:var(--muted); margin-top:8px;}
+.pill{display:inline-block; padding:2px 9px; border-radius:999px; font-size:.7rem; font-weight:700;}
+.pill.good{background:#e5f6ec; color:var(--good);}
+.pill.warn{background:#fdf1dc; color:var(--warn);}
+.pill.bad{background:#fbe7e4; color:var(--bad);}
+.pill.neutral{background:#eef2f3; color:var(--muted);}
+.pill.info{background:#e7edf7; color:#2563a8;}
+
+.kpi-row{display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:12px; margin-bottom:20px;}
+.kpi{background:var(--card); border:1px solid var(--line); border-radius:var(--radius); padding:12px 14px;}
+.kpi .num{font-size:1.7rem; font-weight:800; color:var(--teal-dark);}
+.kpi .lbl{font-size:.72rem; color:var(--muted); text-transform:uppercase; letter-spacing:.03em;}
+.kpi.alert .num{color:var(--bad);}
+
+.btn{display:inline-block; border:none; border-radius:8px; padding:9px 16px; font-size:.85rem; font-weight:600; background:var(--teal); color:#fff;}
+.btn:hover{background:var(--teal-dark);}
+.btn.secondary{background:#fff; color:var(--teal-dark); border:1px solid var(--teal);}
+.btn.ghost{background:transparent; color:var(--muted); border:1px solid var(--line);}
+.btn.danger{background:#fff; color:var(--bad); border:1px solid #f0c4bd;}
+.btn.small{padding:5px 10px; font-size:.76rem;}
+.btn:disabled{opacity:.45; cursor:not-allowed;}
+.btn-row{display:flex; gap:10px; flex-wrap:wrap; margin-top:14px;}
+
+.back-link{background:none; border:none; color:var(--teal-dark); font-weight:600; font-size:.85rem; padding:0; margin-bottom:14px;}
+.module-header{display:flex; align-items:center; gap:14px; margin-bottom:6px;}
+.module-header .topic-icon{font-size:2.2rem;}
+.module-block{background:var(--card); border:1px solid var(--line); border-radius:var(--radius); padding:18px 20px; margin-bottom:14px;}
+.module-block h4{margin-top:0;}
+.module-block ul{margin:6px 0 0; padding-left:20px;}
+.module-block li{margin-bottom:6px;}
+.source-list{font-size:.78rem; color:var(--muted);}
+.source-list li{margin-bottom:5px;}
+
+/* stepper */
+.stepper{display:flex; gap:4px; flex-wrap:wrap; margin-bottom:18px;}
+.step-btn{flex:1; min-width:100px; text-align:center; padding:8px 6px; border-radius:8px; border:1px solid var(--line); background:#fff; font-size:.72rem; font-weight:700; color:var(--muted);}
+.step-btn.current{background:var(--teal); color:#fff; border-color:var(--teal);}
+.step-btn.done{background:var(--teal-light); color:var(--teal-dark); border-color:var(--teal);}
+
+.quiz-q{margin-bottom:18px; padding-bottom:16px; border-bottom:1px solid var(--line);}
+.quiz-q:last-child{border-bottom:none;}
+.quiz-q p.qtext{font-weight:600; margin:0 0 8px;}
+.quiz-opt{display:block; padding:8px 10px; border:1px solid var(--line); border-radius:8px; margin-bottom:6px; cursor:pointer; font-size:.88rem;}
+.quiz-opt:hover{background:var(--teal-light);}
+.quiz-opt input{margin-right:8px;}
+.quiz-opt.correct{background:#e5f6ec; border-color:var(--good);}
+.quiz-opt.incorrect{background:#fbe7e4; border-color:var(--bad);}
+.quiz-explain{font-size:.8rem; color:var(--muted); margin-top:6px; padding:8px 10px; background:var(--teal-light); border-radius:8px;}
+.score-banner{padding:16px 18px; border-radius:var(--radius); font-weight:700; margin-bottom:16px;}
+.score-banner.pass{background:#e5f6ec; color:var(--good);}
+.score-banner.fail{background:#fdf1dc; color:var(--warn);}
+
+.form-row{display:flex; gap:14px; flex-wrap:wrap; margin-bottom:14px;}
+.form-field{flex:1; min-width:150px;}
+.form-field label{display:block; font-size:.76rem; font-weight:700; color:var(--muted); text-transform:uppercase; letter-spacing:.03em; margin-bottom:4px;}
+.form-field input, .form-field select, .form-field textarea{
+  width:100%; padding:8px 10px; border:1px solid var(--line); border-radius:8px; font-size:.9rem; font-family:inherit;
+}
+.form-field textarea{resize:vertical;}
+
+.audit-item{display:flex; align-items:center; gap:14px; padding:10px 4px; border-bottom:1px solid var(--line); flex-wrap:wrap;}
+.audit-item:last-child{border-bottom:none;}
+.audit-item .item-text{flex:1; min-width:220px; font-size:.9rem;}
+.audit-item.critical .item-text::after{content:" ⚠ critical"; color:var(--bad); font-size:.72rem; font-weight:700;}
+.audit-choice{display:flex; gap:6px;}
+.audit-choice label{font-size:.76rem; border:1px solid var(--line); border-radius:6px; padding:5px 10px; cursor:pointer; user-select:none;}
+.audit-choice input{display:none;}
+.audit-choice label:has(input:checked).yes-lbl{background:#e5f6ec; border-color:var(--good); color:var(--good); font-weight:700;}
+.audit-choice label:has(input:checked).no-lbl{background:#fbe7e4; border-color:var(--bad); color:var(--bad); font-weight:700;}
+.audit-choice label:has(input:checked).na-lbl{background:#eef2f3; border-color:var(--muted); color:var(--muted); font-weight:700;}
+.section-heading-sm{font-size:.8rem; font-weight:800; text-transform:uppercase; letter-spacing:.04em; color:var(--teal-dark); margin:18px 0 4px;}
+
+table.history{width:100%; border-collapse:collapse; font-size:.8rem; margin-top:10px;}
+table.history th, table.history td{border:1px solid var(--line); padding:6px 8px; text-align:left;}
+table.history th{background:var(--teal-light); color:var(--teal-dark);}
+table.history tr:nth-child(even){background:#fafcfc;}
+table.history tr.overdue{background:#fbe7e4;}
+table.history tr.due-soon{background:#fdf1dc;}
+
+.chart-wrap{background:var(--card); border:1px solid var(--line); border-radius:var(--radius); padding:14px 16px; margin-top:14px;}
+canvas.trend{width:100%; height:160px; display:block;}
+canvas.chartbox{width:100%; height:200px; display:block;}
+
+.heatmap-grid{display:grid; font-size:.72rem; overflow-x:auto;}
+.heatmap-cell{padding:6px 4px; text-align:center; border:1px solid #fff;}
+.heatmap-rowlabel{font-size:.7rem; padding:6px 6px; color:var(--muted); white-space:nowrap;}
+.heatmap-collabel{font-size:.68rem; font-weight:700; text-align:center; padding:4px; color:var(--teal-dark);}
+
+.factor-cat{border:1px solid var(--line); border-radius:10px; padding:12px 14px; margin-bottom:10px;}
+.factor-cat h5{margin:0 0 8px; font-size:.85rem; color:var(--teal-dark);}
+.factor-cat label.chk{display:flex; align-items:flex-start; gap:8px; font-size:.85rem; margin-bottom:6px;}
+.weight-selects{display:flex; gap:6px; margin-left:26px; margin-top:-4px; margin-bottom:8px;}
+.weight-selects select{font-size:.7rem; padding:2px 4px; border-radius:5px; border:1px solid var(--line);}
+
+.timeline-vis{position:relative; margin:14px 0; padding-left:20px; border-left:2px solid var(--teal);}
+.timeline-vis .tl-entry{position:relative; margin-bottom:14px; padding-left:14px;}
+.timeline-vis .tl-entry::before{content:""; position:absolute; left:-27px; top:3px; width:10px; height:10px; border-radius:50%; background:var(--teal);}
+.timeline-vis .tl-when{font-size:.72rem; font-weight:700; color:var(--teal-dark);}
+.timeline-vis .tl-what{font-size:.85rem;}
+.tl-row{display:flex; gap:8px; margin-bottom:6px; align-items:center;}
+.tl-row input{padding:6px 8px; border:1px solid var(--line); border-radius:6px; font-size:.82rem;}
+.tl-row input.tl-when-in{width:170px;}
+.tl-row input.tl-what-in{flex:1;}
+
+.why-row{display:flex; align-items:center; gap:10px; margin-bottom:0; position:relative; padding-bottom:14px;}
+.why-row:not(:last-child)::after{content:""; position:absolute; left:13px; top:26px; bottom:-2px; width:2px; background:var(--line);}
+.why-row .why-num{width:26px; height:26px; border-radius:50%; background:var(--teal); color:#fff; display:flex; align-items:center; justify-content:center; font-size:.78rem; font-weight:700; flex-shrink:0; z-index:1;}
+.action-row{display:grid; grid-template-columns:1.6fr .9fr .8fr .8fr 1fr .9fr auto; gap:6px; margin-bottom:8px; align-items:center;}
+.action-row input, .action-row select{padding:6px 6px; border:1px solid var(--line); border-radius:6px; font-size:.78rem;}
+.rca-list .card{margin-bottom:10px;}
+.tag{display:inline-block; padding:2px 9px; border-radius:6px; font-size:.7rem; font-weight:700; color:#fff;}
+
+.note-box{background:#fff9e8; border:1px solid #f0dfa8; border-radius:10px; padding:12px 14px; font-size:.82rem; color:#6b5a12; margin-bottom:16px;}
+.alert-box{background:#fbe7e4; border:1px solid #f0c4bd; border-radius:10px; padding:12px 14px; font-size:.85rem; color:#8a2c1f; margin-bottom:16px; font-weight:600;}
+.recur-box{background:#fdf1dc; border:1px solid #f0dfa8; border-radius:10px; padding:12px 14px; font-size:.85rem; color:#6b4b12; margin-bottom:16px; font-weight:600;}
+.empty-state{color:var(--muted); font-size:.85rem; font-style:italic; padding:10px 0;}
+footer.appfoot{text-align:center; color:var(--muted); font-size:.75rem; padding:26px 0;}
+
+.video-slot{border:1px dashed var(--line); border-radius:10px; padding:12px; margin-top:8px;}
+.video-embed{width:100%; aspect-ratio:16/9; border:none; border-radius:8px; background:#000;}
+
+.cert-wrap{border:6px double var(--teal); border-radius:14px; padding:34px; text-align:center; background:#fff;}
+.cert-wrap h2{font-size:1.6rem; margin-bottom:0;}
+.cert-wrap .cert-name{font-size:1.4rem; font-weight:800; color:var(--teal-dark); margin:14px 0;}
+
+@media print{
+  header.appbar, nav.tabs, .btn-row, .no-print{display:none !important;}
+  body{background:#fff;}
+  .module-block, .card, .chart-wrap{box-shadow:none; border:1px solid #999;}
+  main{max-width:100%;}
+}
+</style>
+</head>
+<body>
+
+<header class="appbar">
+  <div class="appbar-top">
+    <div>
+      <p class="appbar-title">🏥 NICU Infection Prevention Bundle</p>
+      <p class="appbar-sub">Learn · Competency · Audit · RCA — CLABSI · VAP · NEC · Hand Hygiene · Skin Care · Milk Hygiene</p>
+    </div>
+    <div class="appbar-user">
+      <span>Staff:</span>
+      <input id="staffNameInput" type="text" placeholder="Your name">
+      <select id="staffRoleInput">
+        <option value="">Role…</option>
+        <option>Staff Nurse</option>
+        <option>Assistant Medical Officer</option>
+        <option>House Officer</option>
+        <option>Medical Officer</option>
+        <option>Paediatrician</option>
+      </select>
+    </div>
+  </div>
+  <nav class="tabs" id="tabNav">
+    <button data-tab="dashboard" class="active">Dashboard</button>
+    <button data-tab="learn">Learn</button>
+    <button data-tab="competency">Competency</button>
+    <button data-tab="audit">Audit Tools</button>
+    <button data-tab="rca">RCA</button>
+    <button data-tab="resources">Resources</button>
+  </nav>
+</header>
+
+<main>
+  <section id="tab-dashboard">
+    <div class="section-title"><h2>Unit Dashboard</h2></div>
+    <p class="section-desc">Quality-improvement snapshot linking learning, audits, and RCA into one continuous cycle. All data is stored locally in this browser.</p>
+    <div id="recurBanner"></div>
+    <div class="kpi-row" id="kpiRow"></div>
+    <div class="grid" id="dashboardCards"></div>
+    <div class="module-block" id="pdsaBlock"></div>
+    <div class="module-block" id="kpiEntryBlock"></div>
+  </section>
+
+  <section id="tab-learn" class="hidden">
+    <div id="learnList">
+      <div class="section-title"><h2>Learning Pathway</h2></div>
+      <p class="section-desc">Pre-test → Learning module → Procedure video → Interactive case → Post-test → Certificate. Scores are tracked to measure real knowledge improvement, not just completion.</p>
+      <div class="grid" id="moduleGrid"></div>
+    </div>
+    <div id="learnDetail" class="hidden"></div>
+  </section>
+
+  <section id="tab-competency" class="hidden">
+    <div class="section-title"><h2>Competency Register</h2></div>
+    <p class="section-desc">Track observed-procedure competency alongside knowledge scores — useful for annual competency and credentialing records.</p>
+    <div class="btn-row"><button class="btn" id="newCompBtn">+ New competency assessment</button></div>
+    <div id="compForm" class="hidden"></div>
+    <div class="module-block" id="compRegisterWrap"></div>
+  </section>
+
+  <section id="tab-audit" class="hidden">
+    <div id="auditList">
+      <div class="section-title"><h2>Audit Tools</h2></div>
+      <p class="section-desc">Structured compliance checklists with breakdowns, heatmaps, control charts, Pareto analysis and benchmarking.</p>
+      <div class="grid" id="auditGrid"></div>
+    </div>
+    <div id="auditDetail" class="hidden"></div>
+  </section>
+
+  <section id="tab-rca" class="hidden">
+    <div class="section-title"><h2>Root Cause Analysis</h2></div>
+    <p class="section-desc">Full RCA workflow: timeline, 5 Whys, auto-generated fishbone diagram, weighted contributing factors, CAPA action tracker, and verification audits.</p>
+    <div id="recurBannerRca"></div>
+    <div class="btn-row"><button class="btn" id="newRcaBtn">+ New RCA</button></div>
+    <div id="rcaForm" class="hidden"></div>
+    <h3 style="margin-top:26px;">RCA History</h3>
+    <div id="rcaHistoryList" class="rca-list"></div>
+  </section>
+
+  <section id="tab-resources" class="hidden">
+    <div class="section-title"><h2>Resources &amp; Data Management</h2></div>
+    <p class="section-desc">Source guidelines used to build this app, plus tools to back up, transfer, or reset your unit's data.</p>
+    <div class="module-block">
+      <h4>Data management</h4>
+      <p style="font-size:.85rem; color:var(--muted);">Everything you enter is stored only in this browser's local storage. Export a backup regularly.</p>
+      <div class="btn-row">
+        <button class="btn secondary" id="exportAllBtn">⬇ Export all data (.json)</button>
+        <button class="btn ghost" id="importAllBtn">⬆ Import data (.json)</button>
+        <input type="file" id="importFileInput" accept=".json" class="hidden">
+        <button class="btn danger" id="resetAllBtn">Reset all data</button>
+      </div>
+    </div>
+    <div class="module-block">
+      <h4>Benchmark settings</h4>
+      <div class="form-row">
+        <div class="form-field"><label>Hospital compliance target (%)</label><input type="number" id="settingTarget" min="0" max="100"></div>
+        <div class="form-field"><label>National average (%)</label><input type="number" id="settingNational" min="0" max="100"></div>
+      </div>
+      <button class="btn secondary small" id="saveSettingsBtn">Save benchmarks</button>
+    </div>
+
+    <div class="module-block">
+      <h4>Google Sheet sync — unit documentation</h4>
+      <p style="font-size:.85rem; color:var(--muted);">Auto-saves every certificate issued, plus learning, audit, competency, and RCA progress, as rows in your unit's shared Google Sheet. Because this app is a single offline file with no server, it connects via a small Apps Script "bridge" you deploy once on your own sheet — Google does not allow a static webpage to write to Sheets directly without one.</p>
+      <ol style="font-size:.85rem;">
+        <li>Open your sheet: <a href="https://docs.google.com/spreadsheets/d/18IePIYsyjMH4mqiAI0vyGPMwSvLfZ6mmUUICZM3i7fo/edit" target="_blank" rel="noopener">NICU unit documentation sheet</a>.</li>
+        <li>In the sheet, go to <strong>Extensions → Apps Script</strong>.</li>
+        <li>Delete any placeholder code and paste in the script below (also copyable with the button).</li>
+        <li>Click <strong>Deploy → New deployment</strong>. Choose type <strong>Web app</strong>. Set "Execute as" to <strong>Me</strong> and "Who has access" to <strong>Anyone</strong>. Click Deploy and authorize when prompted.</li>
+        <li>Copy the Web app URL it gives you, paste it below, and click Save.</li>
+        <li>Click "Push all data now" once to backfill anything already recorded — new certificates, audits, RCAs, competency checks and quiz attempts will sync automatically from then on.</li>
+      </ol>
+      <div class="form-row">
+        <div class="form-field" style="flex:3;"><label>Apps Script Web App URL</label><input type="text" id="sheetUrlInput" placeholder="https://script.google.com/macros/s/…/exec"></div>
+      </div>
+      <div class="btn-row">
+        <button class="btn secondary small" id="saveSheetUrlBtn">Save URL</button>
+        <button class="btn small" id="pushAllNowBtn">⇪ Push all data now</button>
+        <button class="btn ghost small" id="copyScriptBtn">Copy Apps Script code</button>
+      </div>
+      <p class="empty-state" style="margin-top:6px;">Note: browsers can't read the response from a cross-origin request, so this app can't confirm success in real time — open the sheet directly to verify rows are appearing after your first sync.</p>
+      <details style="margin-top:8px;">
+        <summary style="cursor:pointer; font-size:.82rem; color:var(--teal-dark); font-weight:700;">Show Apps Script code</summary>
+        <textarea id="appsScriptCode" readonly style="width:100%; height:220px; font-family:monospace; font-size:.72rem; margin-top:8px;"></textarea>
+      </details>
+      <h5 style="margin-top:16px; font-size:.8rem; color:var(--teal-dark);">Sync activity log (most recent first)</h5>
+      <div id="syncLogWrap"></div>
+    </div>
+
+    <div class="module-block">
+      <h4>Guideline sources referenced in this app</h4>
+      <ul class="source-list" id="sourceList"></ul>
+    </div>
+  </section>
+</main>
+
+<footer class="appfoot">Built for neonatal unit staff education and quality improvement use. Content is a summarized educational aid based on published guidance — always follow your institution's approved policies and clinical judgment. Quiz feedback and case-scenario commentary are pre-written by the app's authors, not a live AI model.</footer>
+
+<script>
+(function(){
+"use strict";
+
+/* ============================================================
+   DATA PLACEHOLDERS — filled in below
+============================================================ */
+const MODULES = [
+{
+  id:"clabsi", name:"CLABSI", full:"Central Line-Associated Bloodstream Infection", icon:"🩸", color:"var(--clabsi)",
+  intro:"A bloodstream infection not related to infection at another site that develops on or after the second day a central line (UVC, UAC, PICC, or tunneled catheter) is in place.",
+  videos:["UVC Insertion","PICC Dressing Change","Scrub the Hub (Hub Disinfection)"],
+  sections:[
+    {h:"Why NICU infants are high-risk", body:"Preterm and critically ill neonates have immature skin and immune defenses and frequently require prolonged central venous access for fluids, medications, and parenteral nutrition — increasing exposure time and infection risk with every additional line-day."},
+    {h:"Insertion bundle", list:[
+      "Perform hand hygiene immediately before the procedure.",
+      "Use maximal sterile barrier precautions: sterile gown, gloves, mask, cap, and a large sterile drape.",
+      "Use an appropriate skin antiseptic and allow it to fully dry before puncture; weigh chlorhexidine-containing agents against gestational/chronologic age and skin maturity.",
+      "Use a standardized insertion checklist and dedicated line cart/kit.",
+      "Choose catheter type and insertion site based on the infant's clinical needs — not on infection prevention alone.",
+      "Select the fewest number of lumens that will meet clinical needs."
+    ]},
+    {h:"Maintenance bundle", list:[
+      "Review line necessity every day and document the decision to keep or remove it.",
+      "\"Scrub the hub\" — disinfect needleless connectors before every access.",
+      "Minimize the number of times the line is accessed and minimize blood draws through it.",
+      "Keep the dressing clean, dry, and intact; change per unit protocol or immediately if soiled/loose.",
+      "Replace administration sets per policy.",
+      "Remove umbilical venous/arterial catheters as soon as no longer needed — consider removal at or before 7 days' dwell time.",
+      "Remove PICCs as soon as clinically appropriate; prolonged dwell time increases risk.",
+      "Consider a dedicated line-care team and antimicrobial locks if the unit is experiencing ongoing CLABSIs.",
+      "Do not use prophylactic antimicrobial or anticoagulant infusions solely to prevent CLABSI."
+    ]},
+    {h:"Surveillance", body:"CLABSI rates are tracked using NHSN definitions and expressed per 1,000 central-line days. Consistent bundle compliance auditing is one of the strongest predictors of sustained rate reduction."}
+  ],
+  sources:[
+    "CDC. Recommendations for Prevention and Control of Infections in NICU Patients: CLABSI (2024). cdc.gov/infection-control/hcp/nicu-clabsi",
+    "CDC/NHSN. Guideline for Prevention of Infections in Neonatal Intensive Care Unit Patients — CLABSI.",
+    "Central line bundle implementation studies, US intensive care units (PMC3022589, PMC12729402)."
+  ],
+  quiz:[
+    {q:"Per NHSN definition, a CLABSI must occur on or after which day of central line placement?", options:["Day 1 (the day of insertion)","Day 2 or later","Day 7","Day 14"], a:1, ex:"CLABSI is defined as a bloodstream infection identified on or after the 2nd calendar day the line is in place (day of insertion = day 1)."},
+    {q:"Which is a core part of the insertion bundle?", options:["Maximal sterile barrier precautions","Prophylactic antibiotic infusion","Daily antibiotic lock regardless of CLABSI rate","Routine use of the femoral site"], a:0, ex:"Maximal sterile barrier precautions (gown, gloves, mask, cap, large drape) are a core insertion-bundle element; prophylactic antimicrobial infusions are not recommended."},
+    {q:"Umbilical arterial/venous catheters should generally be considered for removal:", options:["Only if an infection is confirmed","At or before 7 days' dwell time when no longer needed","After 30 days","Only at discharge"], a:1, ex:"Guidelines recommend considering removal of umbilical catheters at or before 7 days' dwell time due to rising CLABSI risk with each additional day."},
+    {q:"Before accessing a needleless connector/hub, staff should:", options:["Flush with saline only","Disinfect (\"scrub the hub\")","Wait 24 hours between accesses","Nothing extra is required"], a:1, ex:"\"Scrub the hub\" — disinfecting the connector before each access — is a key maintenance-bundle step."},
+    {q:"True or False: Catheter type and insertion site should be chosen based solely on reducing CLABSI risk.", options:["True","False"], a:1, ex:"Catheter type/site should be chosen based on the infant's overall clinical needs; CLABSI prevention is one factor, not the sole driver."},
+    {q:"A key maintenance-bundle habit for reducing CLABSI is:", options:["Reviewing line necessity daily and removing lines promptly","Leaving lines in as long as possible for convenience","Accessing the hub as often as needed without disinfection","Changing dressings only at discharge"], a:0, ex:"Daily review of necessity and prompt removal when no longer needed is one of the most effective maintenance-bundle practices."}
+  ],
+  caseStudy:{
+    title:"26-Week Infant with CLABSI Risk",
+    narrative:"A baby born at 26 weeks' gestation has an umbilical venous catheter (UVC) inserted on day of life 1 for parenteral nutrition and IV access. On day of life 9, the infant develops temperature instability, increased apnea/bradycardia episodes, and mild abdominal distension. The bedside nurse notes the UVC has not been accessed in the last 6 hours other than routine maintenance fluids.",
+    questions:[
+      {q:"Was continuing the UVC to day 9 appropriate, given current guidance?", options:["Yes, UVCs may stay in as long as clinically needed with no time limit","Guidance suggests considering removal at or before 7 days' dwell time if no longer needed — this warrants review","No central line should ever exceed 3 days","Removal timing does not affect CLABSI risk"], a:1, ex:"Current guidance recommends considering removal of umbilical catheters at or before 7 days' dwell time; by day 9 the line's ongoing necessity and removal plan should have been actively reviewed and documented."},
+      {q:"Which bundle element is most likely to have been missed if this infection is confirmed as a CLABSI?", options:["Daily review of line necessity / prompt removal when appropriate","Choice of catheter type","Use of parenteral nutrition","Infant's gestational age"], a:0, ex:"Daily necessity review and prompt removal are core maintenance-bundle steps; extended dwell time without a documented removal plan is a common contributing factor in NICU CLABSI cases."},
+      {q:"What investigations should be prioritized at this point?", options:["Blood culture (ideally from the line and peripherally) before starting antibiotics, plus CBC/CRP","Chest X-ray only","Stool culture only","No investigations needed until fever persists 48 hours"], a:0, ex:"Blood cultures (paired if possible) drawn before antibiotics, plus inflammatory markers, are the priority work-up for suspected late-onset sepsis/CLABSI in a NICU infant with new temperature instability."},
+      {q:"Based on the information given, does this meet the NHSN definition of CLABSI?", options:["Yes — automatically, because a UVC was in place","Not yet determinable from this vignette alone — requires a positive blood culture with no other identifiable source, on/after the line has been in place, per NHSN criteria","No — NHSN CLABSI requires a positive urine culture","No — CLABSI cannot occur with umbilical catheters"], a:1, ex:"NHSN CLABSI determination requires a recognized pathogen (or common commensal from two separate cultures) in blood, with no other identifiable infection source — clinical suspicion alone (fever, apnea) is necessary but not sufficient without confirmatory culture data and exclusion of other sources."}
+    ]
+  }
+},
+{
+  id:"vap", name:"VAP", full:"Ventilator-Associated Pneumonia", icon:"🫁", color:"var(--vap)",
+  intro:"Bacterial invasion of the lung parenchyma occurring after more than 48 hours of mechanical ventilation, arising from colonization of the aerodigestive tract, aspiration of secretions, or contaminated equipment.",
+  videos:["Endotracheal Suctioning Technique"],
+  sections:[
+    {h:"Risk factors", body:"Low birth weight, prematurity, prolonged mechanical ventilation, reintubation, frequent endotracheal suctioning, presence of other invasive devices, transfusions, and prior bloodstream infection all raise VAP risk in neonates."},
+    {h:"Prevention bundle", list:[
+      "Elevate the head of the bed approximately 15–30° for ventilated neonates.",
+      "Provide oral care every 3–4 hours to keep the oral cavity clean; select solutions appropriate to the infant's age (routine chlorhexidine oral care is not established practice in neonates).",
+      "Perform hand hygiene before and after contact with the infant, oral care, and respiratory equipment/supplies.",
+      "Use objective criteria for intubation/extubation; favor non-invasive respiratory support whenever possible.",
+      "Complete a daily documented assessment of readiness for extubation.",
+      "Use full sterile/aseptic precautions for suctioning; use closed suction systems where available.",
+      "Clear oral secretions before repositioning, extubation, or reintubation.",
+      "Change ventilator circuits only when visibly soiled or malfunctioning — not on a fixed schedule.",
+      "Store oral suction equipment appropriately (e.g., in a clean bag) between uses."
+    ]},
+    {h:"Surveillance", body:"Neonatal VAP/ventilator-associated event rates are monitored using CDC/NHSN criteria and reported per 1,000 ventilator-days; regular bundle-compliance audits and staff training sustain improvement."}
+  ],
+  sources:[
+    "EFCNI/ESCNH. European Standards of Care for Newborn Health: Prevention of Ventilator Associated Pneumonia (Dubois C, Tissières P, et al., 2018).",
+    "Azab et al. Reducing VAP in NICU using a VAP prevention bundle: a cohort study. BMC Infect Dis. 2015.",
+    "Cernada M, et al. Ventilator-associated pneumonia in neonatal patients: an update. Neonatology 2014."
+  ],
+  quiz:[
+    {q:"Recommended head-of-bed elevation for ventilated neonates to help prevent VAP:", options:["0° (flat)","Approximately 15–30°","60–90°","No specific recommendation exists"], a:1, ex:"Head-of-bed elevation of roughly 15–30° is recommended for ventilated neonates as part of the VAP bundle."},
+    {q:"How often should oral care be provided to a ventilated neonate?", options:["Once per shift","Every 3–4 hours","Only when visibly soiled","Once daily"], a:1, ex:"Oral care every 3–4 hours helps keep the oral cavity clean and reduce aspiration of contaminated secretions."},
+    {q:"Ventilator circuits should be changed:", options:["Every 24 hours regardless of condition","Only when visibly soiled or malfunctioning","Every 7 days on a fixed schedule","Never, until extubation"], a:1, ex:"Evidence supports changing circuits only when soiled or malfunctioning rather than on a fixed schedule, which does not reduce VAP and increases cost/exposure."},
+    {q:"True or False: Chlorhexidine oral care is an established, routine practice for neonatal VAP prevention.", options:["True","False"], a:1, ex:"Unlike in older children/adults, chlorhexidine oral care is not an established routine practice in neonates; oral care solutions should be age-appropriate."},
+    {q:"VAP is generally defined as pneumonia occurring after ventilation for more than:", options:["12 hours","24 hours","48 hours","1 week"], a:2, ex:"VAP arises in a patient ventilated for more than 48 hours."},
+    {q:"A daily practice that reduces duration of ventilation and therefore VAP risk is:", options:["Sedation holidays only for adults","Documented daily assessment of extubation readiness","Waiting for a fixed number of ventilator days before considering extubation","Avoiding non-invasive support"], a:1, ex:"A daily, documented assessment of readiness for extubation helps minimize unnecessary ventilator days."}
+  ],
+  caseStudy:{
+    title:"32-Week Infant, Ventilated Day 6",
+    narrative:"An infant born at 32 weeks is intubated for respiratory distress syndrome on day of life 1. By day 6 of mechanical ventilation, the nurse documents that oral care was last given at the start of the shift 9 hours ago, and the head of bed is flat because the incubator was recently reprocessed. The infant develops new purulent secretions and worsening oxygen requirement.",
+    questions:[
+      {q:"What deviations from the VAP prevention bundle are evident in this scenario?", options:["Oral care interval exceeded protocol (9h vs recommended 3-4h) and head of bed not elevated","No deviations — care was appropriate","Only the head-of-bed positioning was an issue","Only oral care timing was an issue"], a:0, ex:"Both oral care frequency (should be every 3-4 hours) and head-of-bed elevation (15-30°) are core bundle elements; both were missed here."},
+      {q:"What should happen before assuming this is VAP rather than another process?", options:["Confirm ventilation duration >48h, review CDC/NHSN criteria, and rule out other infection sources","Immediately document this as confirmed VAP","Extubate immediately regardless of readiness","Assume it is a ventilator malfunction only"], a:0, ex:"VAP surveillance definitions require review against NHSN criteria (radiographic/clinical/laboratory criteria plus ventilation >48h) and exclusion of other sources before diagnostic labeling."},
+      {q:"What immediate corrective actions are appropriate?", options:["Resume oral care per protocol, elevate head of bed, and reinforce with staff at handover","Wait until the next shift to correct positioning","No action needed since it's a single lapse","Discontinue oral care entirely to avoid disturbing the infant"], a:0, ex:"Prompt correction of bundle deviations (oral care resumption, head-of-bed elevation) plus staff reinforcement is the appropriate immediate response."}
+    ]
+  }
+},
+{
+  id:"nec", name:"NEC", full:"Necrotizing Enterocolitis", icon:"🍼", color:"var(--nec)",
+  intro:"A multifactorial inflammatory bowel necrosis primarily affecting preterm infants, linked to prematurity, formula feeding, gut dysbiosis, and intestinal ischemia.",
+  videos:["Enteral Feeding Tube Placement & Residual Check"],
+  sections:[
+    {h:"Feeding-based prevention", list:[
+      "Preferentially feed own mother's milk; use pasteurized donor human milk when it is unavailable, rather than formula.",
+      "Follow a standardized, unit-wide feeding protocol for initiation and advancement — standardized protocols have been associated with substantially lower NEC rates in infants <1500 g.",
+      "A typical protocol starts trophic feeds around 20 mL/kg/day for several days, then advances by about 20 mL/kg/day as tolerated toward a full-feed goal.",
+      "Consider a human milk-based fortifier over a cow's-milk-based fortifier for infants <1250 g when available.",
+      "Avoid routine, scheduled gastric residual checks; assess residuals only when clinically indicated."
+    ]},
+    {h:"Antimicrobial & line stewardship", list:[
+      "Discontinue empiric antibiotics by 48 hours when cultures are negative and there is no ongoing clinical concern.",
+      "Restrict antacid/H2-blocker use to clear clinical indications rather than routine prophylaxis.",
+      "Remove central lines once full feeding volumes (roughly 100 mL/kg/day) are achieved and the line is no longer needed."
+    ]},
+    {h:"Early recognition", body:"Assess and document feeding tolerance, abdominal exam findings, and stool characteristics every shift. Early signs — abdominal distension, bilious residuals, blood in stool, temperature instability, apnea/bradycardia — warrant prompt evaluation."}
+  ],
+  sources:[
+    "Battersby C, et al. NEC-zero: scoping review of evidence to prevent and foster timely recognition of NEC. (PMC5733736).",
+    "East Midlands NEC-prevention care bundle protocol (PMC11141194).",
+    "Exclusive human milk-based diet outcomes in NEC prevention (PMC4782036)."
+  ],
+  quiz:[
+    {q:"Which feeding source is preferred to reduce NEC risk when own mother's milk is unavailable?", options:["Standard cow's-milk formula","Pasteurized donor human milk","Soy-based formula","Diluted formula"], a:1, ex:"Pasteurized donor human milk is preferred over formula when mother's own milk is unavailable."},
+    {q:"Standardized feeding protocols in infants <1500 g are associated with:", options:["No change in NEC risk","A large reduction in NEC odds (reported around two-thirds lower)","Increased NEC risk","Only faster discharge, unrelated to NEC"], a:1, ex:"Standardized feeding protocols have been associated with roughly a 67% reduction in NEC odds in infants <1500 g in published studies."},
+    {q:"If blood cultures are negative and there is no ongoing clinical concern, empiric antibiotics should typically be stopped by:", options:["24 hours","48 hours","5 days","10 days"], a:1, ex:"Discontinuing antibiotics by 48 hours with negative cultures and no clinical concern reduces unnecessary antibiotic exposure linked to NEC risk."},
+    {q:"True or False: Routine, scheduled gastric residual checks before every feed are recommended to prevent NEC.", options:["True","False"], a:1, ex:"Current evidence favors avoiding routine residual checks; they should be assessed only when clinically indicated, as routine checks can lead to unnecessary feeding interruptions."},
+    {q:"A reasonable approach to central line management as part of NEC prevention is to:", options:["Leave lines in for the full NICU stay regardless of feeds","Remove the line once full feeds (~100 mL/kg/day) are reached and it's no longer needed","Only remove lines at 30 days","Never remove lines before discharge"], a:1, ex:"Removing central lines once full feeding volume is achieved (and the line is no longer clinically necessary) reduces line-days and associated risk."},
+    {q:"A typical trophic feed starting volume in a standardized protocol is around:", options:["5 mL/kg/day","20 mL/kg/day","60 mL/kg/day","100 mL/kg/day"], a:1, ex:"Trophic feeds commonly start around 20 mL/kg/day for a few days before advancing."}
+  ],
+  caseStudy:{
+    title:"27-Week Infant with Feeding Intolerance",
+    narrative:"A 27-week infant has been advancing formula feeds by 30 mL/kg/day (protocol specifies 20 mL/kg/day advancement) because a supply issue meant donor milk wasn't available and the family had not yet provided expressed milk. On day 14, the infant has increased gastric residuals, abdominal distension, and one episode of bloody stool.",
+    questions:[
+      {q:"Which practice deviated from the standardized NEC-prevention bundle?", options:["Feeds were advanced faster than the standardized protocol (30 vs 20 mL/kg/day) and formula was used instead of donor milk","Nothing deviated from protocol","The infant should not have been fed at all","Antibiotics were withheld inappropriately"], a:0, ex:"Advancing faster than the unit's standardized protocol and defaulting to formula rather than donor milk when mother's own milk is unavailable are both recognized NEC risk factors."},
+      {q:"What is the appropriate immediate feeding action?", options:["Hold/reduce feeds per unit NEC pathway and escalate for clinical assessment given the new symptoms","Continue advancing feeds as scheduled","Increase feed volume to \"catch up\"","Switch to a different formula brand only"], a:0, ex:"New bloody stool, distension, and rising residuals in a preterm infant warrant holding/adjusting feeds and prompt clinical evaluation for possible NEC, not continued advancement."},
+      {q:"What systemic/process gap contributed to this case?", options:["No contingency plan for donor milk supply shortages","The infant's gestational age","Nursing shift pattern","Room temperature"], a:0, ex:"A supply-chain gap for donor milk directly led to formula substitution — highlighting a process-level contributing factor worth addressing at the unit level, not just an individual care lapse."}
+    ]
+  }
+},
+{
+  id:"hh", name:"Hand Hygiene", full:"Hand Hygiene — WHO 5 Moments", icon:"🧼", color:"var(--hh)",
+  intro:"Hand hygiene is the single most effective, lowest-cost intervention to prevent nosocomial infection transmission in the NICU. The WHO 'My 5 Moments' framework is the international standard of care, adapted here to the incubator/'baby space' concept.",
+  videos:["Hand Hygiene Technique (WHO Steps)"],
+  sections:[
+    {h:"The 5 moments, adapted for NICU", list:[
+      "1 — Before touching the incubator or entering the baby's immediate space.",
+      "2 — Before any aseptic or clean procedure (line access, medication prep, dressing change).",
+      "3 — After any risk of exposure to body fluids.",
+      "4 — After touching the infant, or on exiting the baby space.",
+      "5 — After touching the incubator, surroundings, or equipment near the infant."
+    ]},
+    {h:"Technique", list:[
+      "Use an alcohol-based handrub (ABHR) when hands are not visibly soiled; apply for the recommended duration and cover all surfaces (per WHO technique steps) before hands feel dry.",
+      "Use soap and water when hands are visibly soiled, after using the restroom, or per unit policy for specific exposures.",
+      "Remove rings/bracelets and avoid artificial nails or nail polish, which harbor organisms and reduce hand hygiene effectiveness.",
+      "Teach and reinforce the same 5 moments with parents and visitors on unit entry and around the incubator."
+    ]},
+    {h:"Why it matters here", body:"Very low birth weight and intensively-cared-for neonates have reported nosocomial bloodstream infection rates as high as 11–53% in some series, reflecting immature host defenses and frequent invasive procedures — hand hygiene compliance directly drives this risk down."}
+  ],
+  sources:[
+    "WHO. 'My 5 Moments for Hand Hygiene' framework.",
+    "Hand hygiene compliance to 5 moments in pediatric/neonatal ICUs (PMC4475096).",
+    "NICU hand hygiene practice and adherence barriers, Canadian hospital study (CJIC, Summer 2021)."
+  ],
+  quiz:[
+    {q:"How many 'moments' are in the WHO hand hygiene framework?", options:["3","4","5","7"], a:2, ex:"WHO defines 5 moments for hand hygiene."},
+    {q:"In the NICU adaptation, Moment 1 is:", options:["After leaving the baby space","Before touching the incubator/entering the baby space","After a diaper change","Before lunch"], a:1, ex:"Moment 1 is adapted as before touching the incubator or entering the baby's immediate space."},
+    {q:"Soap and water (rather than alcohol-based handrub) should be used when:", options:["Hands are visibly soiled or after using the restroom","Entering any patient room","Before every single moment, always","Never — ABHR is always preferred"], a:0, ex:"Soap and water is indicated when hands are visibly soiled, contaminated with body fluids, or after restroom use."},
+    {q:"True or False: Artificial nails and nail polish are compatible with good hand hygiene practice in the NICU.", options:["True","False"], a:1, ex:"Artificial nails and polish can harbor organisms and are discouraged in high-risk units like the NICU."},
+    {q:"Who else should be taught the 5 moments of hand hygiene?", options:["Only physicians","Only night-shift staff","Parents and visitors","No one outside clinical staff"], a:2, ex:"Parents and visitors should be instructed in hand hygiene since they have direct contact with the infant and baby space."},
+    {q:"Reported nosocomial bloodstream infection rates among some VLBW/intensively-cared-for neonates have been as high as:", options:["1-2%","11-53%","70-90%","100%"], a:1, ex:"Published series report rates as high as 11-53% in these high-risk populations, underscoring the impact of hand hygiene."}
+  ],
+  caseStudy:{
+    title:"Multi-Bed Bay Rounds",
+    narrative:"During multidisciplinary rounds, the team moves between four incubators in the same bay. The consultant performs hand hygiene once, at the start of rounds, then examines each infant in turn without re-performing hand hygiene between incubators.",
+    questions:[
+      {q:"Which moment(s) of the WHO 5 Moments were missed?", options:["Moment 1 (before touching each new incubator) between each infant","Only Moment 4","No moments were missed","Only Moment 3"], a:0, ex:"Each incubator is a distinct 'baby space' — hand hygiene is required before touching each new incubator (Moment 1), even during the same round, not just once at the start."},
+      {q:"What is the infection-prevention risk of this practice?", options:["Cross-transmission of organisms between infants via the examiner's hands","No risk, since the same clean coat was worn","Risk only if gloves were not worn","Risk only applies to invasive procedures, not physical exams"], a:0, ex:"Hands are a primary vector for cross-transmission between patients; skipping hand hygiene between incubators risks carrying organisms from one infant's environment to the next."},
+      {q:"What is the appropriate correction?", options:["Perform hand hygiene before touching each incubator/baby space, every time","Only perform hand hygiene after all four infants are examined","Wear gloves instead of performing hand hygiene","No correction needed if hands appear clean"], a:0, ex:"The 5 Moments framework requires hand hygiene before touching each incubator, regardless of how recently hand hygiene was last performed elsewhere."}
+    ]
+  }
+},
+{
+  id:"skin", name:"Skin Care", full:"Neonatal Skin Care", icon:"🩹", color:"var(--skin)",
+  intro:"Preterm skin is thin, has a poorly developed stratum corneum, and is prone to transepidermal water loss (TEWL), breakdown, and injury from adhesives and pressure — all of which can become portals for infection.",
+  videos:["Medical Adhesive Application & Removal"],
+  sections:[
+    {h:"Core practices (AWHONN/NANN evidence-based guideline)", list:[
+      "Assess skin condition using the Neonatal Skin Condition Score (NSCS) at birth, at each shift change/caregiver handoff, and at diaper changes.",
+      "Delay the first bath and limit bathing frequency (not daily) — especially for preterm infants — using plain warm water sponge baths initially.",
+      "Do not routinely remove vernix caseosa; it provides a protective barrier.",
+      "Apply emollients to reduce TEWL, particularly for infants born before ~32 weeks gestation.",
+      "Use dry cord care for the umbilical stump; avoid unnecessary topical antiseptics.",
+      "Use barrier products (e.g., pectin- or hydrocolloid-based) under adhesives, and remove adhesives slowly with water or an adhesive remover rather than pulling.",
+      "Monitor for medical adhesive-related skin injury (MARSI) — reported in roughly 16–27% of hospitalized neonates — and for pressure injury at device contact points.",
+      "Follow a protocol for monitoring IV sites for infiltration/extravasation."
+    ]}
+  ],
+  sources:[
+    "AWHONN/NANN. Neonatal Skin Care: Evidence-Based Clinical Practice Guideline (JOGNN).",
+    "Child and Adolescent Health Service (WA). Neonatology Skin Care Guideline.",
+    "MARSI prevalence and prevention literature in hospitalized neonates."
+  ],
+  quiz:[
+    {q:"The validated tool for assessing neonatal skin condition is the:", options:["Braden Scale","Neonatal Skin Condition Score (NSCS)","APGAR score","Ballard Score"], a:1, ex:"The NSCS is the tool recommended for structured neonatal skin assessment."},
+    {q:"Vernix caseosa should generally be:", options:["Scrubbed off at the first bath","Left in place — it is protective","Removed with alcohol swabs","Removed only from preterm infants"], a:1, ex:"Vernix provides a protective skin barrier and should not be routinely removed."},
+    {q:"Emollient use to reduce transepidermal water loss is especially important for infants born before about:", options:["28 days of age","32 weeks gestation","37 weeks gestation","Term infants only"], a:1, ex:"Infants born before roughly 32 weeks gestation have the least mature skin barrier and benefit most from emollient use."},
+    {q:"Reported prevalence of medical adhesive-related skin injury (MARSI) in hospitalized neonates is approximately:", options:["1-2%","16-27%","50-60%","90-100%"], a:1, ex:"Published estimates suggest 16-27% of hospitalized neonates are predisposed to at least one MARSI event."},
+    {q:"True or False: Adhesives should be pulled off quickly to minimize infant distress.", options:["True","False"], a:1, ex:"Adhesives should be removed slowly, using water or an adhesive remover, to prevent skin stripping — not pulled quickly."},
+    {q:"Neonatal skin assessment should occur:", options:["Only at admission","At birth, shift change/handoff, and diaper changes","Once weekly","Only if skin breakdown is already visible"], a:1, ex:"Regular, scheduled assessment at these three points catches problems early."}
+  ],
+  caseStudy:{
+    title:"Adhesive Removal After 5 Days",
+    narrative:"A 28-week infant has had a saturation probe adhesive in place for 5 days without site rotation. During removal, the nurse pulls the adhesive off quickly to 'get it over with.' The infant's skin shows redness and superficial skin stripping at the site afterward.",
+    questions:[
+      {q:"What skin-care bundle element was missed?", options:["Slow, appropriate adhesive removal technique using water/remover, and timely site rotation","Use of emollient","Bathing frequency","Umbilical cord care"], a:0, ex:"Adhesives should be removed slowly using water or an adhesive remover, and device sites rotated regularly, to avoid MARSI (medical adhesive-related skin injury)."},
+      {q:"What should be documented and assessed now?", options:["NSCS skin assessment and MARSI documentation at the affected site","No documentation needed since it's minor","Only a physician progress note","A feeding intolerance note"], a:0, ex:"A structured skin assessment (NSCS) and specific MARSI documentation should follow any adhesive-related skin injury to track healing and inform practice change."},
+      {q:"What system-level action could prevent recurrence?", options:["Staff education on adhesive removal technique and a site-rotation reminder in the care plan","Switching all patients to no monitoring devices","Reducing charting requirements","None — this is a one-off, unavoidable event"], a:0, ex:"MARSI is largely preventable; staff education and building rotation reminders into the care plan address the process gap rather than treating it as unavoidable."}
+    ]
+  }
+},
+{
+  id:"milk", name:"Milk Hygiene", full:"Breast Milk / Human Milk Hygiene", icon:"🍶", color:"var(--milk)",
+  intro:"Expressed breast milk and donor human milk pass through multiple handling steps before reaching a fragile infant — hygiene at each step (expression, storage, thawing, fortification, feeding) is essential to prevent contamination.",
+  videos:["Milk Expression & Preparation"],
+  sections:[
+    {h:"Expression & equipment", list:[
+      "Wash hands well with soap and water before expressing or handling milk; use an alcohol-based hand sanitizer (≥60% alcohol) if soap and water are unavailable.",
+      "Inspect pump kits and tubing before use; discard and replace any tubing showing mold immediately.",
+      "If using a shared pump, disinfect dials, power switch, and countertop with a disinfectant wipe before use."
+    ]},
+    {h:"Storage & labeling", list:[
+      "Use clean, food-grade containers (glass or plastic) with tight-fitting lids, or dedicated breast milk storage bags — never disposable bottle liners.",
+      "Label every container with at least two patient identifiers plus the date and time expressed.",
+      "Storage limits: room temperature (≤25°C) up to 4 hours; refrigerator up to 4 days; freezer about 6 months for best quality (up to 12 months acceptable). In warmer, non-air-conditioned areas common in Malaysian wards, use the shorter end of the room-temperature window.",
+      "Store milk toward the back/interior of the fridge or freezer, not the door, to avoid temperature fluctuation."
+    ]},
+    {h:"Thawing, fortifying & feeding", list:[
+      "Follow first-in, first-out (FIFO): thaw the oldest milk first.",
+      "Thaw in the refrigerator, or under cool/lukewarm running water — never in a microwave.",
+      "Milk thawed in the refrigerator should be used within 24 hours; once brought to room temperature or warmed, use within 2 hours.",
+      "Never refreeze thawed milk.",
+      "Prepare fortified feeds immediately before use and follow unit policy on maximum hang time at the bedside.",
+      "Donor milk should be sourced only from an accredited hospital human milk bank with documented donor screening and Holder pasteurization, per Ministry of Health Malaysia / institutional protocol."
+    ]}
+  ],
+  sources:[
+    "CDC. Breast Milk Storage and Preparation (Breastfeeding guidance).",
+    "Hospital-based donor human milk bank standards (donor screening, Holder pasteurization, and quality testing per institutional/Ministry of Health Malaysia protocol).",
+    "Academy of Breastfeeding Medicine, Clinical Protocol #8: Human Milk Storage Information."
+  ],
+  quiz:[
+    {q:"If soap and water are unavailable before expressing milk, hand sanitizer should contain at least:", options:["20% alcohol","40% alcohol","60% alcohol","No alcohol needed"], a:2, ex:"CDC guidance recommends an alcohol-based hand sanitizer with at least 60% alcohol when soap and water aren't available."},
+    {q:"Freshly expressed breast milk can be kept at room temperature (≤25°C) for up to:", options:["1 hour","4 hours","24 hours","3 days"], a:1, ex:"Room-temperature storage is recommended for up to 4 hours — use the shorter end of this window in warm, non-air-conditioned areas."},
+    {q:"Refrigerated breast milk should generally be used within:", options:["24 hours","4 days","2 weeks","1 month"], a:1, ex:"Refrigerated milk is recommended for use within about 4 days."},
+    {q:"Once breast milk has thawed in the refrigerator, it should be used within:", options:["2 hours","24 hours","3 days","1 week"], a:1, ex:"Refrigerator-thawed milk should be used within 24 hours of being fully thawed."},
+    {q:"True or False: Breast milk can be safely warmed in a microwave.", options:["True","False"], a:1, ex:"Microwaving is never recommended — it can create uneven hot spots and destroy nutrients."},
+    {q:"Donor human milk used in the NICU should come from:", options:["Any willing donor with no screening","An accredited hospital milk bank with documented donor screening/pasteurization","Only frozen milk of unknown origin","Local milk-sharing social media groups"], a:1, ex:"Accredited hospital milk banks apply rigorous donor health screening and Holder pasteurization standards before releasing milk for NICU use."},
+    {q:"Every stored milk container should be labeled with:", options:["Nothing — labeling isn't necessary","At least two patient identifiers plus date/time expressed","Only the mother's first name","Only a barcode"], a:1, ex:"Two patient identifiers plus date/time expressed is the safe labeling standard to prevent misadministration."}
+  ],
+  caseStudy:{
+    title:"Delayed Fortification at the Bedside",
+    narrative:"Fortified breast milk was prepared and delivered to the bedside at 08:00 for a 09:30 feed, but due to rounds, the feed was actually given at 12:15 — over 4 hours after preparation, sitting at room temperature the entire time.",
+    questions:[
+      {q:"What milk-hygiene principle was breached?", options:["Maximum hang-time/room-temperature limits for prepared (especially fortified) feeds were exceeded","Labeling requirements were breached","Freezer storage duration was breached","Donor milk screening was breached"], a:0, ex:"Prepared/fortified feeds have unit-defined maximum hang times at room temperature (commonly around 4 hours or less); exceeding this risks bacterial proliferation."},
+      {q:"What should happen to this feed?", options:["Discard it and prepare a fresh feed rather than administering it","Refrigerate and use later","Administer it since it's \"probably fine\"","Refreeze it for another day"], a:0, ex:"Feeds that exceed safe hang-time limits should be discarded rather than administered, refrigerated, or refrozen."},
+      {q:"What process change would prevent recurrence?", options:["Align feed-preparation timing more closely with actual feed times, and set a bedside timer/alert for hang-time limits","Prepare all feeds a full shift in advance to save time","Stop fortifying milk altogether","Ask parents to prepare feeds instead"], a:0, ex:"Better synchronizing preparation timing with actual feed delivery, plus a hang-time reminder system, addresses the root workflow issue."}
+    ]
+  }
+}
+];
+const AUDITS = [
+{ id:"clabsi", name:"CLABSI Bundle Audit", icon:"🩸", color:"var(--clabsi)",
+  groups:[
+    { title:"Insertion Bundle", items:[
+      {t:"Hand hygiene performed immediately before the procedure"},
+      {t:"Maximal sterile barrier precautions used (gown, gloves, mask, cap, large drape)", critical:true},
+      {t:"Appropriate skin antisepsis used and allowed to fully dry before puncture"},
+      {t:"Standardized insertion checklist/kit used"},
+      {t:"Catheter type & insertion site appropriate to clinical need and documented"},
+      {t:"Fewest necessary lumens selected"}
+    ]},
+    { title:"Maintenance Bundle", items:[
+      {t:"Line necessity reviewed and documented today"},
+      {t:"Hub/needleless connector disinfected (\"scrub the hub\") before each access", critical:true},
+      {t:"Number of hub accesses and blood draws minimized"},
+      {t:"Dressing clean, dry, intact; changed per protocol"},
+      {t:"Administration sets replaced per policy"},
+      {t:"UVC/UAC removed at or before 7 days if no longer needed (or documented rationale to continue)"},
+      {t:"PICC removed as soon as clinically appropriate"},
+      {t:"Hand hygiene performed before/after all line care"}
+    ]}
+  ]
+},
+{ id:"vap", name:"VAP Bundle Audit", icon:"🫁", color:"var(--vap)",
+  groups:[
+    { title:"Ventilator Care Bundle", items:[
+      {t:"Head of bed elevated approximately 15-30°"},
+      {t:"Oral care performed per protocol frequency (every 3-4 hours)", critical:true},
+      {t:"Hand hygiene performed before/after contact with respiratory equipment/supplies"},
+      {t:"Daily extubation-readiness assessment documented"},
+      {t:"Ventilator circuit changed only when soiled/malfunctioning (not on fixed schedule)"},
+      {t:"Suctioning performed using aseptic/closed technique"},
+      {t:"Oral secretions cleared before repositioning, extubation, or reintubation"},
+      {t:"Oral suction equipment stored appropriately between uses"}
+    ]}
+  ]
+},
+{ id:"nec", name:"NEC Prevention Audit", icon:"🍼", color:"var(--nec)",
+  groups:[
+    { title:"Feeding & Antimicrobial Stewardship", items:[
+      {t:"Feeding advanced per standardized unit feeding protocol", critical:true},
+      {t:"Own mother's milk or donor human milk used preferentially over formula"},
+      {t:"Routine scheduled gastric residual checks avoided (assessed only if clinically indicated)"},
+      {t:"Antibiotics discontinued by 48 hours if cultures negative and no clinical concern"},
+      {t:"Antacid/H2-blocker use restricted to clear clinical indication"},
+      {t:"Feeding managed per unit policy during hemodynamic instability/procedures"},
+      {t:"Feeding tolerance & abdominal exam assessed and documented each shift"},
+      {t:"Central line removed once full feeds (~100 mL/kg/day) achieved if no longer needed"}
+    ]}
+  ]
+},
+{ id:"hh", name:"Hand Hygiene Audit (5 Moments)", icon:"🧼", color:"var(--hh)",
+  groups:[
+    { title:"5 Moments Observation", items:[
+      {t:"Hand hygiene before touching incubator/entering baby space", critical:true},
+      {t:"Hand hygiene before aseptic/clean procedure"},
+      {t:"Hand hygiene after body-fluid exposure risk"},
+      {t:"Hand hygiene after touching infant / exiting baby space"},
+      {t:"Hand hygiene after touching surroundings/equipment near infant"},
+      {t:"Correct technique/duration used for alcohol-based handrub"},
+      {t:"Soap and water used when hands visibly soiled"},
+      {t:"No jewelry, artificial nails, or nail polish observed"},
+      {t:"Parents/visitors observed performing hand hygiene on unit entry"}
+    ]}
+  ]
+},
+{ id:"skin", name:"Skin Care Bundle Audit", icon:"🩹", color:"var(--skin)",
+  groups:[
+    { title:"Skin Assessment & Care", items:[
+      {t:"Neonatal Skin Condition Score documented at birth/shift change/diaper change"},
+      {t:"Bathing frequency appropriate (not daily) and per protocol"},
+      {t:"Vernix not routinely removed"},
+      {t:"Emollient applied per protocol for infants <32 weeks gestation"},
+      {t:"Barrier used under adhesives; adhesives removed slowly with remover/water", critical:true},
+      {t:"Skin assessed for MARSI/pressure injury each shift"},
+      {t:"Umbilical cord managed per dry cord care protocol"},
+      {t:"IV/infusion sites monitored and documented for infiltration"}
+    ]}
+  ]
+},
+{ id:"milk", name:"Milk Hygiene Audit", icon:"🍶", color:"var(--milk)",
+  groups:[
+    { title:"Expression, Storage & Feeding", items:[
+      {t:"Hand hygiene performed before expressing/handling milk", critical:true},
+      {t:"Pump equipment/tubing inspected, clean, free of mold"},
+      {t:"Milk stored in labeled, food-grade, tight-lid container"},
+      {t:"Label includes 2 patient identifiers plus date/time expressed"},
+      {t:"Storage time limits adhered to (room temp / fridge / freezer)"},
+      {t:"FIFO and safe thawing procedure followed (no microwave use)"},
+      {t:"Donor milk sourced from accredited hospital milk bank with documentation"},
+      {t:"Fortified feeds prepared immediately before use per hang-time policy"}
+    ]}
+  ]
+}
+];
+const RCA_FACTORS = {
+  CLABSI:[
+    {cat:"People / Staffing", items:["Staffing ratio below target at time of event","Hand hygiene non-compliance observed","Competency/training gap in line insertion or care","New or agency staff involved without orientation"]},
+    {cat:"Process / Procedure", items:["Insertion checklist not used or incomplete","Maintenance bundle step missed (hub disinfection, dressing care, necessity review)","Line access/blood draw frequency higher than necessary","Delayed line removal despite no longer being needed"]},
+    {cat:"Equipment / Devices", items:["Dressing or securement product issue","Needleless connector/hub design or supply issue","Antiseptic product availability or expiry issue"]},
+    {cat:"Environment", items:["Workflow interruptions during insertion or care","Unit crowding/high acuity at time of event","Isolation/cohorting practices not followed"]},
+    {cat:"Patient Factors", items:["Extreme prematurity / very low birth weight","Skin integrity issues at insertion site","Multiple line access needs (medications, TPN, blood draws)"]}
+  ],
+  VAP:[
+    {cat:"People / Staffing", items:["Staffing ratio below target at time of event","Hand hygiene non-compliance around respiratory equipment","Competency/training gap in oral care or suctioning technique"]},
+    {cat:"Process / Procedure", items:["Oral care frequency missed or inconsistent","Head-of-bed elevation not maintained","Extubation-readiness assessment not documented daily","Suctioning technique not aseptic/closed system not used"]},
+    {cat:"Equipment / Devices", items:["Ventilator circuit changed off-protocol or contaminated","Suction equipment stored improperly between uses","Oral care supplies unavailable or inappropriate for age"]},
+    {cat:"Environment", items:["Workflow interruptions during respiratory care","Unit crowding/high acuity at time of event"]},
+    {cat:"Patient Factors", items:["Prolonged ventilation duration","Reintubation required","Extreme prematurity / very low birth weight"]}
+  ],
+  NEC:[
+    {cat:"People / Staffing", items:["Staffing ratio below target during feeding advancement","Competency/training gap in feeding protocol","Delayed recognition of feeding-intolerance signs"]},
+    {cat:"Process / Procedure", items:["Standardized feeding protocol not followed / feeds advanced too quickly","Routine (non-indicated) gastric residual checks performed","Antibiotics continued beyond 48h without clinical indication despite negative cultures","Antacid/H2-blocker used without clear indication","Central line not removed despite full feeds achieved"]},
+    {cat:"Equipment / Devices", items:["Feeding tube/enteral equipment issue","Milk handling/fortification hygiene lapse"]},
+    {cat:"Environment", items:["Workflow interruptions during feeds","Unit crowding/high acuity at time of event"]},
+    {cat:"Patient Factors", items:["Extreme prematurity / very low birth weight","Formula feeding (own milk/donor milk unavailable)","Hemodynamic instability / perinatal stress"]}
+  ]
+};
+
+/* Maps a specific audit checklist item (by audit id + item text) to a specific
+   RCA contributing-factor key ("Category|item"), so a failed audit item can be
+   imported straight into an RCA's fishbone with one click. */
+const AUDIT_TO_RCA_MAP = {
+  clabsi:{
+    "Maximal sterile barrier precautions used (gown, gloves, mask, cap, large drape)":"Process / Procedure|Insertion checklist not used or incomplete",
+    "Standardized insertion checklist/kit used":"Process / Procedure|Insertion checklist not used or incomplete",
+    "Hub/needleless connector disinfected (\"scrub the hub\") before each access":"Process / Procedure|Maintenance bundle step missed (hub disinfection, dressing care, necessity review)",
+    "Line necessity reviewed and documented today":"Process / Procedure|Delayed line removal despite no longer being needed",
+    "UVC/UAC removed at or before 7 days if no longer needed (or documented rationale to continue)":"Process / Procedure|Delayed line removal despite no longer being needed",
+    "PICC removed as soon as clinically appropriate":"Process / Procedure|Delayed line removal despite no longer being needed",
+    "Dressing clean, dry, intact; changed per protocol":"Equipment / Devices|Dressing or securement product issue",
+    "Hand hygiene performed immediately before the procedure":"People / Staffing|Hand hygiene non-compliance observed",
+    "Hand hygiene performed before/after all line care":"People / Staffing|Hand hygiene non-compliance observed",
+    "Number of hub accesses and blood draws minimized":"Process / Procedure|Line access/blood draw frequency higher than necessary"
+  },
+  vap:{
+    "Oral care performed per protocol frequency (every 3-4 hours)":"Process / Procedure|Oral care frequency missed or inconsistent",
+    "Head of bed elevated approximately 15-30°":"Process / Procedure|Head-of-bed elevation not maintained",
+    "Daily extubation-readiness assessment documented":"Process / Procedure|Extubation-readiness assessment not documented daily",
+    "Suctioning performed using aseptic/closed technique":"Process / Procedure|Suctioning technique not aseptic/closed system not used",
+    "Ventilator circuit changed only when soiled/malfunctioning (not on fixed schedule)":"Equipment / Devices|Ventilator circuit changed off-protocol or contaminated",
+    "Oral suction equipment stored appropriately between uses":"Equipment / Devices|Suction equipment stored improperly between uses",
+    "Hand hygiene performed before/after contact with respiratory equipment/supplies":"People / Staffing|Hand hygiene non-compliance around respiratory equipment"
+  },
+  nec:{
+    "Feeding advanced per standardized unit feeding protocol":"Process / Procedure|Standardized feeding protocol not followed / feeds advanced too quickly",
+    "Own mother's milk or donor human milk used preferentially over formula":"Patient Factors|Formula feeding (own milk/donor milk unavailable)",
+    "Routine scheduled gastric residual checks avoided (assessed only if clinically indicated)":"Process / Procedure|Routine (non-indicated) gastric residual checks performed",
+    "Antibiotics discontinued by 48 hours if cultures negative and no clinical concern":"Process / Procedure|Antibiotics continued beyond 48h without clinical indication despite negative cultures",
+    "Antacid/H2-blocker use restricted to clear clinical indication":"Process / Procedure|Antacid/H2-blocker used without clear indication",
+    "Central line removed once full feeds (~100 mL/kg/day) achieved if no longer needed":"Process / Procedure|Central line not removed despite full feeds achieved",
+    "Feeding tolerance & abdominal exam assessed and documented each shift":"People / Staffing|Delayed recognition of feeding-intolerance signs"
+  }
+};
+
+/* ============================================================
+   STORAGE HELPERS
+============================================================ */
+const LS = {
+  get(key, fallback){ try{ const v = localStorage.getItem(key); return v ? JSON.parse(v) : fallback; }catch(e){ return fallback; } },
+  set(key, val){ localStorage.setItem(key, JSON.stringify(val)); }
+};
+const KEYS = {
+  pre: id => "nicu_pre_"+id,
+  post: id => "nicu_post_"+id,
+  case: id => "nicu_case_"+id,
+  cert: id => "nicu_cert_"+id,
+  reviewed: id => "nicu_reviewed_"+id,
+  video: key => "nicu_video_"+key,
+  comp: "nicu_competency",
+  audit: id => "nicu_audit_"+id,
+  rca: "nicu_rca_records",
+  staff: "nicu_staff_name",
+  role: "nicu_staff_role",
+  settings: "nicu_settings",
+  kpiMonthly: "nicu_kpi_monthly",
+  sheetUrl: "nicu_sheet_webapp_url",
+  syncLog: "nicu_sync_log"
+};
+function todayStr(){ return new Date().toISOString().slice(0,10); }
+function nowStr(){ return new Date().toLocaleString(); }
+function uid(){ return Math.random().toString(36).slice(2,9)+Date.now().toString(36); }
+function clamp(v,lo,hi){ return Math.max(lo,Math.min(hi,v)); }
+function getSettings(){ return LS.get(KEYS.settings, {target:95, national:91}); }
+function getComputedColor(varStr){
+  const tmp = document.createElement("div");
+  tmp.style.color = varStr;
+  document.body.appendChild(tmp);
+  const c = getComputedStyle(tmp).color;
+  document.body.removeChild(tmp);
+  return c;
+}
+function daysBetween(d1,d2){ return Math.round((new Date(d2)-new Date(d1))/86400000); }
+function addDays(dateStr,n){ const d=new Date(dateStr); d.setDate(d.getDate()+n); return d.toISOString().slice(0,10); }
+
+/* ============================================================
+   CHART HELPERS (canvas, no dependencies)
+============================================================ */
+function drawTrendChart(canvas, points, color){
+  const ctx = canvas.getContext("2d");
+  const dpr = window.devicePixelRatio || 1;
+  const w = canvas.clientWidth, h = canvas.clientHeight;
+  canvas.width = w*dpr; canvas.height = h*dpr;
+  ctx.scale(dpr,dpr);
+  ctx.clearRect(0,0,w,h);
+  const padL=34, padR=14, padT=14, padB=24;
+  const plotW = w-padL-padR, plotH = h-padT-padB;
+  ctx.strokeStyle="#dfe7e9"; ctx.lineWidth=1;
+  for(let i=0;i<=4;i++){
+    const y = padT + plotH*i/4;
+    ctx.beginPath(); ctx.moveTo(padL,y); ctx.lineTo(w-padR,y); ctx.stroke();
+    ctx.fillStyle="#5b6b76"; ctx.font="10px sans-serif"; ctx.textAlign="right";
+    ctx.fillText((100-i*25)+"%", padL-6, y+3);
+  }
+  if(!points.length){
+    ctx.fillStyle="#9aa7ae"; ctx.textAlign="center"; ctx.font="12px sans-serif";
+    ctx.fillText("No data logged yet", w/2, h/2);
+    return;
+  }
+  const n = points.length;
+  const stepX = n>1 ? plotW/(n-1) : 0;
+  ctx.beginPath();
+  points.forEach((p,i)=>{
+    const x = padL + stepX*i;
+    const y = padT + plotH*(1-clamp(p.value,0,100)/100);
+    if(i===0) ctx.moveTo(x,y); else ctx.lineTo(x,y);
+  });
+  ctx.strokeStyle=color||"#0e7c86"; ctx.lineWidth=2.4; ctx.stroke();
+  points.forEach((p,i)=>{
+    const x = padL + stepX*i;
+    const y = padT + plotH*(1-clamp(p.value,0,100)/100);
+    ctx.beginPath(); ctx.arc(x,y,3.2,0,Math.PI*2);
+    ctx.fillStyle=color||"#0e7c86"; ctx.fill();
+  });
+  ctx.fillStyle="#5b6b76"; ctx.font="10px sans-serif"; ctx.textAlign="center";
+  const showIdx = n<=6 ? points.map((_,i)=>i) : [0, Math.floor(n/2), n-1];
+  showIdx.forEach(i=>{
+    const x = padL + stepX*i;
+    ctx.fillText(points[i].label, x, h-6);
+  });
+}
+
+/* X-mR individuals control chart: center line = mean, UCL/LCL = mean ± 2.66*mRbar */
+function drawControlChart(canvas, points){
+  const ctx = canvas.getContext("2d");
+  const dpr = window.devicePixelRatio || 1;
+  const w = canvas.clientWidth, h = canvas.clientHeight;
+  canvas.width = w*dpr; canvas.height = h*dpr;
+  ctx.scale(dpr,dpr); ctx.clearRect(0,0,w,h);
+  const padL=38, padR=14, padT=14, padB=24;
+  const plotW = w-padL-padR, plotH = h-padT-padB;
+  if(points.length<2){
+    ctx.fillStyle="#9aa7ae"; ctx.textAlign="center"; ctx.font="12px sans-serif";
+    ctx.fillText("Need at least 2 audits for a control chart", w/2, h/2);
+    return;
+  }
+  const vals = points.map(p=>p.value);
+  const mean = vals.reduce((a,b)=>a+b,0)/vals.length;
+  let mrSum=0; for(let i=1;i<vals.length;i++) mrSum += Math.abs(vals[i]-vals[i-1]);
+  const mrBar = mrSum/(vals.length-1);
+  const ucl = clamp(mean + 2.66*mrBar, 0, 130);
+  const lcl = clamp(mean - 2.66*mrBar, -30, 100);
+  const yMax = 100, yMin = Math.min(0, Math.floor(lcl/10)*10);
+  function yOf(v){ return padT + plotH*(1-(v-yMin)/(yMax-yMin)); }
+  ctx.strokeStyle="#dfe7e9"; ctx.lineWidth=1; ctx.font="10px sans-serif"; ctx.fillStyle="#5b6b76"; ctx.textAlign="right";
+  for(let i=0;i<=4;i++){ const v = yMin + (yMax-yMin)*i/4; const y=yOf(v); ctx.beginPath(); ctx.moveTo(padL,y); ctx.lineTo(w-padR,y); ctx.stroke(); ctx.fillText(Math.round(v)+"%", padL-6, y+3); }
+  const n = points.length; const stepX = n>1?plotW/(n-1):0;
+  function lineAt(v,dash,col){ ctx.save(); ctx.setLineDash(dash); ctx.strokeStyle=col; ctx.lineWidth=1.4; const y=yOf(v); ctx.beginPath(); ctx.moveTo(padL,y); ctx.lineTo(w-padR,y); ctx.stroke(); ctx.restore(); }
+  lineAt(mean,[],"#0e7c86"); lineAt(ucl,[5,4],"#c0392b"); lineAt(lcl,[5,4],"#c0392b");
+  ctx.fillStyle="#0e7c86"; ctx.font="9px sans-serif"; ctx.textAlign="left"; ctx.fillText("mean "+Math.round(mean)+"%", w-padR-70, yOf(mean)-4);
+  ctx.fillStyle="#c0392b"; ctx.fillText("UCL "+Math.round(ucl)+"%", w-padR-70, yOf(ucl)-4);
+  ctx.fillText("LCL "+Math.round(lcl)+"%", w-padR-70, yOf(lcl)+12);
+  ctx.beginPath();
+  points.forEach((p,i)=>{ const x=padL+stepX*i, y=yOf(p.value); if(i===0) ctx.moveTo(x,y); else ctx.lineTo(x,y); });
+  ctx.strokeStyle="#1c3144"; ctx.lineWidth=2; ctx.stroke();
+  points.forEach((p,i)=>{ const x=padL+stepX*i, y=yOf(p.value); const oor = p.value>ucl || p.value<lcl;
+    ctx.beginPath(); ctx.arc(x,y,3.4,0,Math.PI*2); ctx.fillStyle= oor?"#c0392b":"#1c3144"; ctx.fill(); });
+  ctx.fillStyle="#5b6b76"; ctx.textAlign="center";
+  const showIdx = n<=6? points.map((_,i)=>i) : [0,Math.floor(n/2),n-1];
+  showIdx.forEach(i=>{ ctx.fillText(points[i].label, padL+stepX*i, h-6); });
+}
+
+function drawParetoChart(canvas, items){
+  const ctx = canvas.getContext("2d");
+  const dpr = window.devicePixelRatio || 1;
+  const w = canvas.clientWidth, h = canvas.clientHeight;
+  canvas.width = w*dpr; canvas.height = h*dpr;
+  ctx.scale(dpr,dpr); ctx.clearRect(0,0,w,h);
+  const padL=30, padR=34, padT=14, padB=70;
+  const plotW=w-padL-padR, plotH=h-padT-padB;
+  if(!items.length){ ctx.fillStyle="#9aa7ae"; ctx.textAlign="center"; ctx.font="12px sans-serif"; ctx.fillText("No failed items recorded yet", w/2, h/2); return; }
+  const total = items.reduce((s,i)=>s+i.count,0) || 1;
+  const maxCount = Math.max(...items.map(i=>i.count),1);
+  const bw = plotW/items.length;
+  let cum=0;
+  items.forEach((it,i)=>{
+    const x = padL + i*bw;
+    const barH = (it.count/maxCount)*plotH;
+    ctx.fillStyle="#c0392b"; ctx.fillRect(x+4, padT+plotH-barH, bw-8, barH);
+    ctx.fillStyle="#22303c"; ctx.font="10px sans-serif"; ctx.textAlign="center";
+    ctx.fillText(String(it.count), x+bw/2, padT+plotH-barH-4);
+    ctx.save(); ctx.translate(x+bw/2, padT+plotH+10); ctx.rotate(Math.PI/7); ctx.textAlign="left"; ctx.font="9px sans-serif"; ctx.fillStyle="#5b6b76";
+    ctx.fillText(it.label.slice(0,26)+(it.label.length>26?"…":""), 0, 0); ctx.restore();
+  });
+  ctx.beginPath();
+  items.forEach((it,i)=>{ cum += it.count; const x = padL + i*bw + bw/2; const y = padT + plotH*(1-cum/total); if(i===0) ctx.moveTo(x,y); else ctx.lineTo(x,y); });
+  ctx.strokeStyle="#0e7c86"; ctx.lineWidth=2; ctx.stroke();
+  cum=0;
+  items.forEach((it,i)=>{ cum += it.count; const x = padL + i*bw + bw/2; const y = padT + plotH*(1-cum/total); ctx.beginPath(); ctx.arc(x,y,3,0,Math.PI*2); ctx.fillStyle="#0e7c86"; ctx.fill(); });
+}
+
+function renderHeatmap(container, cols, rows, matrix){
+  // matrix[rowIdx][colIdx] = pct number or null
+  let html = `<div class="heatmap-grid" style="grid-template-columns:140px repeat(${cols.length},1fr);">`;
+  html += `<div></div>` + cols.map(c=>`<div class="heatmap-collabel">${c}</div>`).join("");
+  rows.forEach((r,ri)=>{
+    html += `<div class="heatmap-rowlabel">${r}</div>`;
+    cols.forEach((c,ci)=>{
+      const v = matrix[ri][ci];
+      let bg = "#eef2f3", fg="#9aa7ae", txt="—";
+      if(v!==null && v!==undefined){
+        txt = v+"%";
+        if(v>=90){ bg="#1f8a54"; fg="#fff"; }
+        else if(v>=70){ bg="#e0a72e"; fg="#fff"; }
+        else { bg="#c0392b"; fg="#fff"; }
+      }
+      html += `<div class="heatmap-cell" style="background:${bg}; color:${fg};">${txt}</div>`;
+    });
+  });
+  html += `</div>`;
+  container.innerHTML = html;
+}
+
+function renderFishbone(container, type, checkedByCat){
+  if(!container) return;
+  const cats = RCA_FACTORS[type] || [];
+  const w=760, h=44+cats.length*46;
+  let svg = `<svg viewBox="0 0 ${w} ${h}" style="width:100%; height:auto;">`;
+  const spineY = h/2;
+  svg += `<line x1="70" y1="${spineY}" x2="${w-90}" y2="${spineY}" stroke="#1c3144" stroke-width="3"/>`;
+  svg += `<polygon points="${w-90},${spineY-16} ${w-90},${spineY+16} ${w-40},${spineY}" fill="#c0392b"/>`;
+  svg += `<text x="${w-38}" y="${spineY+5}" font-size="13" font-weight="700" fill="#c0392b">${type}</text>`;
+  cats.forEach((c,i)=>{
+    const up = i%2===0;
+    const x0 = 90 + i*((w-180)/Math.max(1,cats.length-1||1));
+    const y1 = up ? spineY-70 : spineY+70;
+    svg += `<line x1="${x0}" y1="${spineY}" x2="${x0+40}" y2="${y1}" stroke="#0e7c86" stroke-width="2"/>`;
+    svg += `<text x="${x0+42}" y="${y1+(up?-4:14)}" font-size="11" font-weight="700" fill="#0e7c86">${c.cat}</text>`;
+    const checked = (checkedByCat[c.cat]||[]);
+    checked.slice(0,4).forEach((item,j)=>{
+      const yy = y1 + (up? -18-(j*13) : 18+(j*13));
+      svg += `<text x="${x0+42}" y="${yy}" font-size="9.5" fill="#22303c">• ${item.slice(0,42)}${item.length>42?"…":""}</text>`;
+    });
+  });
+  svg += `</svg>`;
+  container.innerHTML = svg;
+}
+
+function downloadFile(filename, content, mime){
+  const blob = new Blob([content], {type:mime});
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement("a");
+  link.href = url; link.download = filename;
+  document.body.appendChild(link); link.click(); document.body.removeChild(link);
+  setTimeout(()=> URL.revokeObjectURL(url), 2000);
+}
+
+/* ============================================================
+   GOOGLE SHEET SYNC (via Apps Script Web App bridge)
+   The app cannot write to Google Sheets directly (no OAuth in a
+   static file). Instead it POSTs each row to a small Apps Script
+   Web App the user deploys once against their own sheet; the
+   script appends the row to a named tab, creating it if needed.
+============================================================ */
+function getSheetUrl(){ return LS.get(KEYS.sheetUrl, ""); }
+function logSync(sheetName, ok, note){
+  const log = LS.get(KEYS.syncLog, []);
+  log.push({at: nowStr(), sheet: sheetName, ok, note: note||""});
+  if(log.length>200) log.shift();
+  LS.set(KEYS.syncLog, log);
+}
+function pushRow(sheetName, row){
+  const url = getSheetUrl();
+  if(!url){ logSync(sheetName, false, "No Google Sheet URL configured"); return; }
+  try{
+    fetch(url, {
+      method:"POST",
+      mode:"no-cors",
+      headers:{"Content-Type":"text/plain;charset=utf-8"},
+      body: JSON.stringify({sheet: sheetName, row})
+    }).then(()=> logSync(sheetName, true, "Sent (response not readable due to browser cross-origin rules — check the sheet to confirm)"))
+      .catch(err=> logSync(sheetName, false, String(err)));
+  }catch(err){ logSync(sheetName, false, String(err)); }
+}
+
+function pushAllDataNow(){
+  let count=0;
+  MODULES.forEach(m=>{
+    LS.get(KEYS.cert(m.id), []).forEach(c=>{ pushRow("Certificates", {DateIssued:c.date, Staff:c.staff, Role:c.role||"", Module:m.name, PreTestPct:c.preScore, PostTestPct:c.postScore, ImprovementPts:c.improvement}); count++; });
+    LS.get(KEYS.pre(m.id), []).forEach(p=>{ pushRow("LearningProgress", {Date:p.date, Staff:p.staff, Role:p.role||"", Module:m.name, Phase:"Pre-test", ScorePct:p.pct, TimeSpentSec:p.timeSpentSec||0}); count++; });
+    LS.get(KEYS.post(m.id), []).forEach(p=>{ pushRow("LearningProgress", {Date:p.date, Staff:p.staff, Role:p.role||"", Module:m.name, Phase:"Post-test", ScorePct:p.pct, TimeSpentSec:p.timeSpentSec||0}); count++; });
+  });
+  LS.get(KEYS.comp, []).forEach(c=>{ pushRow("Competency", {Date:c.date, Staff:c.staff, Role:c.role||"", Module:c.moduleName, Assessor:c.assessor||"", AssessorRole:c.assessorRole||"", Status:c.status, Expiry:c.expiry}); count++; });
+  AUDITS.forEach(a=>{ auditHistory(a.id).forEach(h=>{ pushRow("Audits", {Date:h.date, Bundle:a.name, Auditor:h.auditor, ObservedBy:h.observedBy||"", Unit:h.unit||"", CompliancePct:h.pct, CriticalFail:(h.criticalFail||[]).join("; ")}); count++; }); });
+  LS.get(KEYS.rca, []).forEach(r=>{ pushRow("RCA", {EventDate:r.eventDate, Type:r.type, RefNo:r.refNo||"", RootCause:r.rootCause||"", OpenActions:(r.actions||[]).filter(a=>a.status!=="Complete"&&a.status!=="Closed").length, SavedBy:r.savedBy||"", SavedAt:r.savedAt||""}); count++; });
+  return count;
+}
+
+const APPS_SCRIPT_CODE = `function doPost(e) {
+  try {
+    var payload = JSON.parse(e.postData.contents);
+    var sheetName = payload.sheet || "Data";
+    var row = payload.row || {};
+    var ss = SpreadsheetApp.getActiveSpreadsheet();
+    var sheet = ss.getSheetByName(sheetName);
+    if (!sheet) { sheet = ss.insertSheet(sheetName); }
+    var lastCol = sheet.getLastColumn();
+    var existingHeaders = lastCol > 0 ? sheet.getRange(1,1,1,lastCol).getValues()[0] : [];
+    var headers = existingHeaders.filter(String);
+    if (headers.length === 0) {
+      headers = Object.keys(row);
+      sheet.appendRow(headers);
+    }
+    var rowValues = headers.map(function(h){ return row[h] !== undefined ? row[h] : ""; });
+    sheet.appendRow(rowValues);
+    return ContentService.createTextOutput(JSON.stringify({status:"ok"})).setMimeType(ContentService.MimeType.JSON);
+  } catch (err) {
+    return ContentService.createTextOutput(JSON.stringify({status:"error", message: String(err)})).setMimeType(ContentService.MimeType.JSON);
+  }
+}
+function doGet(e) {
+  return ContentService.createTextOutput("NICU Infection Prevention Bundle sync endpoint is running.");
+}`;
+
+function embedVideo(url){
+  if(!url) return "";
+  let src = url;
+  const yt = url.match(/(?:youtu\.be\/|v=)([\w-]{6,})/);
+  if(yt) src = "https://www.youtube.com/embed/"+yt[1];
+  const vim = url.match(/vimeo\.com\/(\d+)/);
+  if(vim) src = "https://player.vimeo.com/video/"+vim[1];
+  return `<iframe class="video-embed" src="${src}" allowfullscreen></iframe>`;
+}
+
+/* ============================================================
+   TAB NAVIGATION
+============================================================ */
+const tabButtons = document.querySelectorAll("#tabNav button");
+tabButtons.forEach(btn=>{
+  btn.addEventListener("click", ()=>{
+    tabButtons.forEach(b=>b.classList.remove("active"));
+    btn.classList.add("active");
+    document.querySelectorAll("main > section").forEach(s=>s.classList.add("hidden"));
+    document.getElementById("tab-"+btn.dataset.tab).classList.remove("hidden");
+    if(btn.dataset.tab==="dashboard") renderDashboard();
+    if(btn.dataset.tab==="learn"){ document.getElementById("learnDetail").classList.add("hidden"); document.getElementById("learnList").classList.remove("hidden"); renderModuleGrid(); }
+    if(btn.dataset.tab==="competency") renderCompetencyTab();
+    if(btn.dataset.tab==="audit"){ document.getElementById("auditDetail").classList.add("hidden"); document.getElementById("auditList").classList.remove("hidden"); renderAuditGrid(); }
+    if(btn.dataset.tab==="rca") renderRcaHistory();
+    if(btn.dataset.tab==="resources") renderResources();
+  });
+});
+
+const staffInput = document.getElementById("staffNameInput");
+const roleInput = document.getElementById("staffRoleInput");
+staffInput.value = LS.get(KEYS.staff, "");
+roleInput.value = LS.get(KEYS.role, "");
+staffInput.addEventListener("input", ()=> LS.set(KEYS.staff, staffInput.value));
+roleInput.addEventListener("change", ()=> LS.set(KEYS.role, roleInput.value));
+
+/* ============================================================
+   PLACEHOLDER FUNCTION STUBS (implemented in later sections)
+============================================================ */
+function countOverdueCompetencies(){
+  const today = todayStr();
+  return LS.get(KEYS.comp, []).filter(r=> r.expiry < today).length;
+}
+function countOpenRcaActions(){
+  const recs = LS.get(KEYS.rca, []);
+  let n=0; recs.forEach(r=> (r.actions||[]).forEach(a=>{ if(a.status!=="Complete" && a.status!=="Closed") n++; }));
+  return n;
+}
+function countRepeatInfections(){
+  const recs = LS.get(KEYS.rca, []);
+  const byType = {};
+  const cutoff = addDays(todayStr(), -90);
+  recs.forEach(r=>{ if(r.eventDate >= cutoff){ byType[r.type]=(byType[r.type]||0)+1; } });
+  return Object.values(byType).filter(c=>c>=2).length;
+}
+function learningCompletionByRole(){
+  const byRole = {};
+  MODULES.forEach(m=>{
+    const post = LS.get(KEYS.post(m.id), []);
+    post.forEach(p=>{
+      const role = p.role || "Unspecified";
+      byRole[role] = byRole[role] || {pass:0,total:0};
+      byRole[role].total++;
+      if(p.pct>=80) byRole[role].pass++;
+    });
+  });
+  return byRole;
+}
+function unitSafetyScore(){
+  let complianceSum=0, complianceCount=0;
+  AUDITS.forEach(a=>{ const p = auditCompliance(a.id); if(p!==null){ complianceSum+=p; complianceCount++; } });
+  const avgCompliance = complianceCount? complianceSum/complianceCount : 0;
+  const byRole = learningCompletionByRole();
+  let passSum=0,totalSum=0; Object.values(byRole).forEach(v=>{ passSum+=v.pass; totalSum+=v.total; });
+  const learningPassRate = totalSum? 100*passSum/totalSum : 0;
+  const overdue = countOverdueCompetencies();
+  const openActions = countOpenRcaActions();
+  const penalty = clamp(overdue*8 + openActions*4, 0, 100);
+  const score = clamp(Math.round(0.5*avgCompliance + 0.3*learningPassRate + 0.2*(100-penalty)), 0, 100);
+  return {score, avgCompliance:Math.round(avgCompliance), learningPassRate:Math.round(learningPassRate), overdue, openActions};
+}
+
+function renderDashboard(){
+  const recur = detectRecurrence();
+  document.getElementById("recurBanner").innerHTML = recur.length ? `<div class="recur-box">🔁 Recurrent root cause detected: ${recur.map(r=>`"${r.factorKey}" implicated in ${r.count} ${r.type} cases`).join("; ")}.</div>` : "";
+
+  const kpiRow = document.getElementById("kpiRow");
+  const rcaRecords = LS.get(KEYS.rca, []);
+  let totalAudits=0, complianceSum=0, complianceCount=0, modulesComplete=0;
+  AUDITS.forEach(a=>{ const h=auditHistory(a.id); totalAudits+=h.length; if(h.length){ complianceSum+=h[h.length-1].pct; complianceCount++; } });
+  MODULES.forEach(m=>{ if(LS.get(KEYS.cert(m.id),[]).length) modulesComplete++; });
+  const avgCompliance = complianceCount? Math.round(complianceSum/complianceCount) : null;
+  const safety = unitSafetyScore();
+
+  kpiRow.innerHTML = `
+    <div class="kpi"><div class="num">${safety.score}</div><div class="lbl">Unit safety score*</div></div>
+    <div class="kpi"><div class="num">${avgCompliance!==null? avgCompliance+"%":"—"}</div><div class="lbl">Avg. bundle compliance</div></div>
+    <div class="kpi"><div class="num">${modulesComplete}/${MODULES.length}</div><div class="lbl">Modules certified</div></div>
+    <div class="kpi ${countOverdueCompetencies()>0?"alert":""}"><div class="num">${countOverdueCompetencies()}</div><div class="lbl">Overdue competencies</div></div>
+    <div class="kpi ${countOpenRcaActions()>0?"alert":""}"><div class="num">${countOpenRcaActions()}</div><div class="lbl">Open CAPA actions</div></div>
+    <div class="kpi ${countRepeatInfections()>0?"alert":""}"><div class="num">${countRepeatInfections()}</div><div class="lbl">Repeat infection types (90d)</div></div>
+    <div class="kpi"><div class="num">${rcaRecords.length}</div><div class="lbl">RCAs on record</div></div>
+    <div class="kpi"><div class="num">${totalAudits}</div><div class="lbl">Audits logged</div></div>
+  `;
+
+  const grid = document.getElementById("dashboardCards");
+  grid.innerHTML = "";
+  AUDITS.forEach(a=>{
+    const pct = auditCompliance(a.id);
+    const best = bestScore(KEYS.post(a.id));
+    const card = document.createElement("div");
+    card.className = "card topic-card";
+    card.style.borderTopColor = a.color;
+    let pillHtml = pct===null ? `<span class="pill neutral">No audits yet</span>` :
+      pct>=90 ? `<span class="pill good">${pct}% compliant</span>` :
+      pct>=75 ? `<span class="pill warn">${pct}% compliant</span>` :
+      `<span class="pill bad">${pct}% compliant</span>`;
+    card.innerHTML = `
+      <span class="topic-icon">${a.icon}</span>
+      <h3>${a.name.replace(" Bundle Audit","").replace(" Audit","")}</h3>
+      ${pillHtml}
+      <div class="stat-row"><span>Post-test best</span><span>${best!==null? best+"%" : "—"}</span></div>
+      <canvas class="trend" height="90"></canvas>
+    `;
+    card.addEventListener("click", ()=>{ document.querySelector('[data-tab="audit"]').click(); openAuditDetail(a.id); });
+    grid.appendChild(card);
+    requestAnimationFrame(()=> drawTrendChart(card.querySelector("canvas"), auditHistoryPoints(a.id), getComputedColor(a.color)));
+  });
+
+  document.getElementById("pdsaBlock").innerHTML = `
+    <h4>Learn → Audit → RCA: a continuous PDSA cycle</h4>
+    <svg viewBox="0 0 600 220" style="width:100%; max-width:520px; height:auto; display:block; margin:0 auto;">
+      <circle cx="300" cy="110" r="90" fill="none" stroke="#dfe7e9" stroke-width="18"/>
+      <path d="M300,20 A90,90 0 0,1 390,110" fill="none" stroke="#0e7c86" stroke-width="18"/>
+      <path d="M390,110 A90,90 0 0,1 300,200" fill="none" stroke="#2563a8" stroke-width="18"/>
+      <path d="M300,200 A90,90 0 0,1 210,110" fill="none" stroke="#c98a12" stroke-width="18"/>
+      <path d="M210,110 A90,90 0 0,1 300,20" fill="none" stroke="#c0392b" stroke-width="18"/>
+      <text x="300" y="16" text-anchor="middle" font-size="13" font-weight="700" fill="#0e7c86">Plan (Learn)</text>
+      <text x="470" y="115" text-anchor="middle" font-size="13" font-weight="700" fill="#2563a8">Do (Audit)</text>
+      <text x="300" y="215" text-anchor="middle" font-size="13" font-weight="700" fill="#c98a12">Study (Dashboard)</text>
+      <text x="140" y="115" text-anchor="middle" font-size="13" font-weight="700" fill="#c0392b">Act (RCA / CAPA)</text>
+    </svg>
+    <p style="font-size:.82rem; color:var(--muted);">Staff learn the bundle (Plan), audits verify real-world compliance (Do), the dashboard surfaces weak spots and trends (Study), and any infection triggers an RCA with CAPA follow-up (Act) — feeding back into re-education and re-audit.</p>
+    <p style="font-size:.72rem; color:var(--muted);">*Unit safety score is an illustrative composite (50% bundle compliance + 30% learning pass rate + 20% adjusted for overdue competencies/open CAPA actions) — not a validated metric. Adjust the weighting in code to match your unit's QI framework.</p>
+  `;
+
+  const byRole = learningCompletionByRole();
+  const kpiMonthly = LS.get(KEYS.kpiMonthly, []).sort((a,b)=>a.month.localeCompare(b.month));
+  const lastKpi = kpiMonthly[kpiMonthly.length-1];
+  const clabsiRate = lastKpi && lastKpi.lineDays ? (1000*lastKpi.clabsiEvents/lastKpi.lineDays).toFixed(2) : "—";
+  const vapRate = lastKpi && lastKpi.ventDays ? (1000*lastKpi.vapEvents/lastKpi.ventDays).toFixed(2) : "—";
+  const necRate = lastKpi && lastKpi.admissionsU1500 ? (100*lastKpi.necEvents/lastKpi.admissionsU1500).toFixed(1) : "—";
+  const hhAudit = auditCompliance("hh"); const clabsiAudit = auditCompliance("clabsi"); const vapAudit = auditCompliance("vap");
+
+  document.getElementById("kpiEntryBlock").innerHTML = `
+    <h4>Executive KPIs</h4>
+    <div class="kpi-row">
+      <div class="kpi"><div class="num">${clabsiRate}</div><div class="lbl">CLABSI / 1000 line-days</div></div>
+      <div class="kpi"><div class="num">${vapRate}</div><div class="lbl">VAP / 1000 vent-days</div></div>
+      <div class="kpi"><div class="num">${necRate}${necRate!=="—"?"%":""}</div><div class="lbl">NEC incidence, &lt;1500g</div></div>
+      <div class="kpi"><div class="num">${hhAudit!==null?hhAudit+"%":"—"}</div><div class="lbl">Hand hygiene compliance</div></div>
+      <div class="kpi"><div class="num">${clabsiAudit!==null?clabsiAudit+"%":"—"}</div><div class="lbl">CLABSI bundle compliance</div></div>
+      <div class="kpi"><div class="num">${vapAudit!==null?vapAudit+"%":"—"}</div><div class="lbl">VAP bundle compliance</div></div>
+    </div>
+    <div class="chart-wrap"><strong>CLABSI rate per 1,000 line-days (SPC)</strong><canvas class="chartbox" id="clabsiRateCanvas" height="180"></canvas></div>
+    <div class="chart-wrap"><strong>VAP rate per 1,000 ventilator-days (SPC)</strong><canvas class="chartbox" id="vapRateCanvas" height="180"></canvas></div>
+
+    <h4 style="margin-top:20px;">Learning completion rate by staff category</h4>
+    ${Object.keys(byRole).length ? Object.entries(byRole).map(([role,v])=>`<div class="stat-row"><span>${role}</span><span>${Math.round(100*v.pass/v.total)}% (${v.pass}/${v.total} post-tests ≥80%)</span></div>`).join("") : `<p class="empty-state">No post-test attempts logged yet.</p>`}
+
+    <h4 style="margin-top:20px;">Monthly KPI data entry</h4>
+    <form id="kpiForm">
+      <div class="form-row">
+        <div class="form-field"><label>Month</label><input type="month" id="kpiMonth" value="${todayStr().slice(0,7)}"></div>
+        <div class="form-field"><label>Central-line days</label><input type="number" id="kpiLineDays" min="0"></div>
+        <div class="form-field"><label>CLABSI events</label><input type="number" id="kpiClabsiEv" min="0"></div>
+      </div>
+      <div class="form-row">
+        <div class="form-field"><label>Ventilator days</label><input type="number" id="kpiVentDays" min="0"></div>
+        <div class="form-field"><label>VAP events</label><input type="number" id="kpiVapEv" min="0"></div>
+        <div class="form-field"><label>Admissions &lt;1500g</label><input type="number" id="kpiAdmU1500" min="0"></div>
+        <div class="form-field"><label>NEC events</label><input type="number" id="kpiNecEv" min="0"></div>
+      </div>
+      <div class="btn-row"><button type="submit" class="btn secondary">Save month's data</button></div>
+    </form>
+    ${kpiMonthly.length ? `<table class="history"><thead><tr><th>Month</th><th>Line-days</th><th>CLABSI ev.</th><th>Rate/1000</th><th>Vent-days</th><th>VAP ev.</th><th>Rate/1000</th><th>Adm &lt;1500g</th><th>NEC ev.</th><th>NEC %</th></tr></thead><tbody>
+      ${kpiMonthly.map(k=>`<tr><td>${k.month}</td><td>${k.lineDays}</td><td>${k.clabsiEvents}</td><td>${k.lineDays?(1000*k.clabsiEvents/k.lineDays).toFixed(2):"—"}</td><td>${k.ventDays}</td><td>${k.vapEvents}</td><td>${k.ventDays?(1000*k.vapEvents/k.ventDays).toFixed(2):"—"}</td><td>${k.admissionsU1500}</td><td>${k.necEvents}</td><td>${k.admissionsU1500?(100*k.necEvents/k.admissionsU1500).toFixed(1)+"%":"—"}</td></tr>`).join("")}
+    </tbody></table>` : `<p class="empty-state">No monthly KPI data logged yet.</p>`}
+  `;
+
+  requestAnimationFrame(()=>{
+    const clabsiPts = kpiMonthly.filter(k=>k.lineDays).map(k=>({label:k.month.slice(5), value: clamp(1000*k.clabsiEvents/k.lineDays,0,100)}));
+    const vapPts = kpiMonthly.filter(k=>k.ventDays).map(k=>({label:k.month.slice(5), value: clamp(1000*k.vapEvents/k.ventDays,0,100)}));
+    drawControlChart(document.getElementById("clabsiRateCanvas"), clabsiPts);
+    drawControlChart(document.getElementById("vapRateCanvas"), vapPts);
+  });
+
+  document.getElementById("kpiForm").addEventListener("submit",(e)=>{
+    e.preventDefault();
+    const month = document.getElementById("kpiMonth").value || todayStr().slice(0,7);
+    const entry = {
+      month,
+      lineDays: +document.getElementById("kpiLineDays").value||0,
+      clabsiEvents: +document.getElementById("kpiClabsiEv").value||0,
+      ventDays: +document.getElementById("kpiVentDays").value||0,
+      vapEvents: +document.getElementById("kpiVapEv").value||0,
+      admissionsU1500: +document.getElementById("kpiAdmU1500").value||0,
+      necEvents: +document.getElementById("kpiNecEv").value||0
+    };
+    let arr = LS.get(KEYS.kpiMonthly, []);
+    arr = arr.filter(a=>a.month!==month);
+    arr.push(entry);
+    LS.set(KEYS.kpiMonthly, arr);
+    renderDashboard();
+  });
+}
+function bestScore(key){ const arr = LS.get(key, []); return arr.length? Math.max(...arr.map(a=>a.pct)) : null; }
+function latestScore(key){ const arr = LS.get(key, []); return arr.length? arr[arr.length-1].pct : null; }
+
+function renderModuleGrid(){
+  const grid = document.getElementById("moduleGrid");
+  grid.innerHTML = "";
+  MODULES.forEach(m=>{
+    const pre = bestScore(KEYS.pre(m.id));
+    const post = bestScore(KEYS.post(m.id));
+    const certs = LS.get(KEYS.cert(m.id), []);
+    const card = document.createElement("div");
+    card.className = "card topic-card";
+    card.style.borderTopColor = m.color;
+    let statusPill = certs.length ? `<span class="pill good">Certified ✓</span>` :
+      post!==null ? (post>=80? `<span class="pill good">Post-test ${post}%</span>` : `<span class="pill warn">Post-test ${post}% — retake</span>`) :
+      pre!==null ? `<span class="pill info">Pre-test done — continue pathway</span>` :
+      `<span class="pill neutral">Not started</span>`;
+    card.innerHTML = `
+      <span class="topic-badge" style="background:${m.color}">${m.name}</span><br>
+      <span class="topic-icon">${m.icon}</span>
+      <h3>${m.full}</h3>
+      <p style="font-size:.83rem; color:var(--muted); min-height:44px;">${m.intro.slice(0,105)}${m.intro.length>105?"…":""}</p>
+      ${statusPill}
+      ${pre!==null && post!==null ? `<div class="stat-row"><span>Knowledge gain</span><span>${pre}% → ${post}% (${post-pre>=0?"+":""}${post-pre} pts)</span></div>` : ""}
+    `;
+    card.addEventListener("click", ()=> openModuleDetail(m.id));
+    grid.appendChild(card);
+  });
+}
+
+const STEP_LIST = [
+  {k:"pretest", label:"1. Pre-test"},
+  {k:"content", label:"2. Module"},
+  {k:"video", label:"3. Videos"},
+  {k:"case", label:"4. Case Scenario"},
+  {k:"posttest", label:"5. Post-test"},
+  {k:"certificate", label:"6. Certificate"}
+];
+
+function openModuleDetail(moduleId, startStep){
+  const m = MODULES.find(x=>x.id===moduleId);
+  document.getElementById("learnList").classList.add("hidden");
+  const detail = document.getElementById("learnDetail");
+  detail.classList.remove("hidden");
+  let step = startStep || (LS.get(KEYS.pre(m.id),[]).length===0 ? "pretest" : "content");
+
+  function stepperHtml(){
+    return `<div class="stepper">${STEP_LIST.map(s=>{
+      const done = (s.k==="pretest" && LS.get(KEYS.pre(m.id),[]).length) ||
+                   (s.k==="content" && LS.get(KEYS.reviewed(m.id),false)) ||
+                   (s.k==="case" && LS.get(KEYS.case(m.id),[]).length) ||
+                   (s.k==="posttest" && LS.get(KEYS.post(m.id),[]).length) ||
+                   (s.k==="certificate" && LS.get(KEYS.cert(m.id),[]).length);
+      return `<button type="button" class="step-btn ${step===s.k?"current":done?"done":""}" data-step="${s.k}">${s.label}${done?" ✓":""}</button>`;
+    }).join("")}</div>`;
+  }
+
+  function renderBody(){
+    let bodyHtml = "";
+    if(step==="pretest" || step==="posttest"){
+      bodyHtml = assessmentHtml(m, step);
+    } else if(step==="content"){
+      bodyHtml = contentHtml(m);
+    } else if(step==="video"){
+      bodyHtml = videoHtml(m);
+    } else if(step==="case"){
+      bodyHtml = caseHtml(m);
+    } else if(step==="certificate"){
+      bodyHtml = certificateHtml(m);
+    }
+    detail.querySelector("#stepBody").innerHTML = bodyHtml;
+    wireStepBody(m, step);
+  }
+
+  detail.innerHTML = `
+    <button class="back-link" id="backToModules">&larr; Back to modules</button>
+    <div class="module-header">
+      <span class="topic-icon">${m.icon}</span>
+      <div><span class="topic-badge" style="background:${m.color}">${m.name}</span><h2 style="margin:4px 0 0;">${m.full}</h2></div>
+    </div>
+    <div id="stepperWrap">${stepperHtml()}</div>
+    <div id="stepBody"></div>
+    <div class="module-block" id="analyticsBlock"></div>
+  `;
+  renderBody();
+  renderModuleAnalytics(m);
+
+  document.getElementById("backToModules").addEventListener("click", ()=>{ detail.classList.add("hidden"); document.getElementById("learnList").classList.remove("hidden"); renderModuleGrid(); });
+  detail.querySelector("#stepperWrap").addEventListener("click",(e)=>{
+    const btn = e.target.closest(".step-btn"); if(!btn) return;
+    step = btn.dataset.step;
+    detail.querySelector("#stepperWrap").innerHTML = stepperHtml();
+    renderBody();
+  });
+}
+
+function contentHtml(m){
+  let sectionsHtml = m.sections.map(s=>`
+    <div class="module-block">
+      <h4>${s.h}</h4>
+      ${ s.body ? `<p>${s.body}</p>` : "" }
+      ${ s.list ? `<ul>${s.list.map(li=>`<li>${li}</li>`).join("")}</ul>` : "" }
+    </div>
+  `).join("");
+  let sourcesHtml = `<div class="module-block"><h4>Sources</h4><ul class="source-list">${m.sources.map(s=>`<li>${s}</li>`).join("")}</ul></div>`;
+  const reviewed = LS.get(KEYS.reviewed(m.id), false);
+  return `
+    <p style="color:var(--muted);">${m.intro}</p>
+    ${sectionsHtml}
+    ${sourcesHtml}
+    <div class="btn-row">
+      <button class="btn ${reviewed?"secondary":""}" id="markReviewedBtn">${reviewed? "✓ Marked as reviewed" : "Mark module as reviewed"}</button>
+    </div>
+  `;
+}
+
+function videoHtml(m){
+  return `<div class="module-block">
+    <h4>Procedure videos</h4>
+    <p style="font-size:.82rem; color:var(--muted);">Paste a link to your unit's own procedure video (YouTube, Vimeo, or hospital intranet URL). A QR code pointing to this link can be printed and posted at the bedside.</p>
+    ${m.videos.map((v,i)=>{
+      const url = LS.get(KEYS.video(m.id+"_"+i), "");
+      return `<div class="video-slot" data-vi="${i}">
+        <strong>▶ ${v}</strong>
+        <div class="form-row" style="margin-top:8px;">
+          <div class="form-field" style="flex:3;"><input type="text" class="video-url-in" placeholder="https://…" value="${url.replace(/"/g,'&quot;')}"></div>
+          <div class="form-field" style="flex:0 0 auto;"><button type="button" class="btn secondary small save-video-btn">Save link</button></div>
+        </div>
+        <div class="video-preview">${url? embedVideo(url) : `<p class="empty-state">No video linked yet.</p>`}</div>
+      </div>`;
+    }).join("")}
+  </div>`;
+}
+
+function assessmentHtml(m, step){
+  const isPost = step==="posttest";
+  if(isPost && LS.get(KEYS.pre(m.id),[]).length===0){
+    return `<div class="note-box">Complete the pre-test first so knowledge improvement can be measured.</div>`;
+  }
+  return `<div class="module-block">
+    <h4>${isPost? "Post-test" : "Pre-test"} — ${m.name} (${m.quiz.length} questions)</h4>
+    ${!isPost? `<p style="font-size:.82rem; color:var(--muted);">Answer based on what you already know — this measures your starting point.</p>`:""}
+    <form id="quizForm">
+      ${m.quiz.map((q,qi)=>`<div class="quiz-q" data-qi="${qi}"><p class="qtext">${qi+1}. ${q.q}</p>
+        ${q.options.map((opt,oi)=>`<label class="quiz-opt"><input type="radio" name="q${qi}" value="${oi}"> <span>${opt}</span></label>`).join("")}
+        <div class="quiz-explain hidden" data-ex="${qi}"></div>
+      </div>`).join("")}
+      <div class="btn-row"><button type="submit" class="btn">Submit ${isPost?"post-test":"pre-test"}</button></div>
+    </form>
+    <div id="quizResult"></div>
+  </div>`;
+}
+
+function caseHtml(m){
+  const cs = m.caseStudy;
+  return `<div class="module-block">
+    <h4>Interactive Case — ${cs.title}</h4>
+    <p>${cs.narrative}</p>
+    <form id="caseForm">
+      ${cs.questions.map((q,qi)=>`<div class="quiz-q" data-qi="${qi}"><p class="qtext">${qi+1}. ${q.q}</p>
+        ${q.options.map((opt,oi)=>`<label class="quiz-opt"><input type="radio" name="cq${qi}" value="${oi}"> <span>${opt}</span></label>`).join("")}
+        <div class="quiz-explain hidden" data-ex="${qi}"></div>
+      </div>`).join("")}
+      <div class="btn-row"><button type="submit" class="btn">Submit case answers</button></div>
+    </form>
+    <div id="caseResult"></div>
+  </div>`;
+}
+
+function certificateHtml(m){
+  const preBest = bestScore(KEYS.pre(m.id));
+  const postBest = bestScore(KEYS.post(m.id));
+  const reviewed = LS.get(KEYS.reviewed(m.id), false);
+  const caseDone = LS.get(KEYS.case(m.id), []).length>0;
+  const eligible = preBest!==null && reviewed && caseDone && postBest!==null && postBest>=80;
+  const reqs = [
+    {label:"Pre-test completed", ok: preBest!==null},
+    {label:"Learning module reviewed", ok: reviewed},
+    {label:"Case scenario completed", ok: caseDone},
+    {label:"Post-test ≥ 80%", ok: postBest!==null && postBest>=80}
+  ];
+  const certs = LS.get(KEYS.cert(m.id), []).slice().reverse();
+  const certRows = certs.map(c=>`<tr><td>${c.staff}</td><td>${c.role||"—"}</td><td>${c.date}</td><td>${c.preScore}% → ${c.postScore}%</td><td>${c.postScore-c.preScore>=0?"+":""}${c.postScore-c.preScore}</td><td><button type="button" class="btn secondary small reprint-cert-btn" data-id="${c.id}">🖨 Print / Save PDF</button></td></tr>`).join("");
+  return `<div class="module-block">
+    <h4>Certificate requirements</h4>
+    <ul>${reqs.map(r=>`<li>${r.ok?"✅":"⬜"} ${r.label}</li>`).join("")}</ul>
+    <div class="btn-row"><button class="btn" id="genCertBtn" ${eligible?"":"disabled"}>Generate certificate</button></div>
+    ${!eligible? `<p class="empty-state">Complete all requirements above to unlock the certificate.</p>`:""}
+  </div>
+  <div class="module-block">
+    <h4>Saved certificates for this module</h4>
+    ${certs.length? `<table class="history"><thead><tr><th>Staff</th><th>Role</th><th>Date issued</th><th>Pre → Post</th><th>Gain</th><th></th></tr></thead><tbody>${certRows}</tbody></table>
+      <p style="font-size:.78rem; color:var(--muted); margin-top:8px;">"Print / Save PDF" reopens the certificate — choose "Save as PDF" as the destination in the print dialog to keep a file copy.</p>`
+      : `<p class="empty-state">No certificates generated yet for this module.</p>`}
+  </div>`;
+}
+
+function wireStepBody(m, step){
+  if(step==="content"){
+    const btn = document.getElementById("markReviewedBtn");
+    if(btn) btn.addEventListener("click", ()=>{ LS.set(KEYS.reviewed(m.id), true); openModuleDetail(m.id, "content"); });
+  }
+  if(step==="video"){
+    document.querySelectorAll(".video-slot").forEach(slot=>{
+      slot.querySelector(".save-video-btn").addEventListener("click", ()=>{
+        const i = slot.dataset.vi;
+        const url = slot.querySelector(".video-url-in").value.trim();
+        LS.set(KEYS.video(m.id+"_"+i), url);
+        slot.querySelector(".video-preview").innerHTML = url? embedVideo(url) : `<p class="empty-state">No video linked yet.</p>`;
+      });
+    });
+  }
+  if(step==="pretest" || step==="posttest"){
+    const form = document.getElementById("quizForm");
+    if(!form) return;
+    const isPost = step==="posttest";
+    const startedAt = Date.now();
+    form.addEventListener("submit",(e)=>{
+      e.preventDefault();
+      let correct=0; const missed=[];
+      m.quiz.forEach((q,qi)=>{
+        const chosen = document.querySelector(`input[name="q${qi}"]:checked`);
+        const opts = document.querySelectorAll(`.quiz-q[data-qi="${qi}"] .quiz-opt`);
+        opts.forEach((optEl,oi)=>{ optEl.classList.remove("correct","incorrect"); if(oi===q.a) optEl.classList.add("correct"); else if(chosen && +chosen.value===oi) optEl.classList.add("incorrect"); });
+        const exEl = document.querySelector(`.quiz-explain[data-ex="${qi}"]`);
+        const chosenText = chosen? q.options[+chosen.value] : "(no answer)";
+        const isRight = chosen && +chosen.value===q.a;
+        exEl.textContent = isRight ? "Correct — "+q.ex : `You selected: "${chosenText}". That's not the safest choice — ${q.ex}`;
+        exEl.classList.remove("hidden");
+        if(isRight) correct++; else missed.push(qi);
+      });
+      const pct = Math.round((correct/m.quiz.length)*100);
+      const timeSpentSec = Math.round((Date.now()-startedAt)/1000);
+      const key = isPost? KEYS.post(m.id) : KEYS.pre(m.id);
+      const arr = LS.get(key, []);
+      const attempt = {date:todayStr(), staff:staffInput.value||"(unnamed)", role:roleInput.value||"", pct, missed, timeSpentSec};
+      arr.push(attempt);
+      LS.set(key, arr);
+      pushRow("LearningProgress", {Date:attempt.date, Staff:attempt.staff, Role:attempt.role, Module:m.name, Phase:isPost?"Post-test":"Pre-test", ScorePct:pct, TimeSpentSec:timeSpentSec});
+      const resultDiv = document.getElementById("quizResult");
+      let extra = "";
+      if(isPost){
+        const preBest = bestScore(KEYS.pre(m.id));
+        if(preBest!==null) extra = ` Knowledge change vs. pre-test: ${pct-preBest>=0?"+":""}${pct-preBest} points (${preBest}% → ${pct}%).`;
+      }
+      resultDiv.innerHTML = `<div class="score-banner ${pct>=80?"pass":"fail"}">Score ${pct}% (${correct}/${m.quiz.length}).${extra}</div>`;
+      document.getElementById("stepperWrap").innerHTML = "";
+      window.scrollTo({top:0, behavior:"smooth"});
+      // refresh stepper state without full step change
+      openModuleDetail(m.id, step);
+      renderModuleAnalytics(m);
+    });
+  }
+  if(step==="case"){
+    const form = document.getElementById("caseForm");
+    if(!form) return;
+    form.addEventListener("submit",(e)=>{
+      e.preventDefault();
+      let correct=0;
+      m.caseStudy.questions.forEach((q,qi)=>{
+        const chosen = document.querySelector(`input[name="cq${qi}"]:checked`);
+        const opts = document.querySelectorAll(`.quiz-q[data-qi="${qi}"] .quiz-opt`);
+        opts.forEach((optEl,oi)=>{ optEl.classList.remove("correct","incorrect"); if(oi===q.a) optEl.classList.add("correct"); else if(chosen && +chosen.value===oi) optEl.classList.add("incorrect"); });
+        const exEl = document.querySelector(`.quiz-explain[data-ex="${qi}"]`);
+        const chosenText = chosen? q.options[+chosen.value] : "(no answer)";
+        const isRight = chosen && +chosen.value===q.a;
+        exEl.textContent = isRight ? "Correct — "+q.ex : `You selected: "${chosenText}". Reconsider — ${q.ex}`;
+        exEl.classList.remove("hidden");
+        if(isRight) correct++;
+      });
+      const pct = Math.round((correct/m.caseStudy.questions.length)*100);
+      const arr = LS.get(KEYS.case(m.id), []);
+      arr.push({date:todayStr(), staff:staffInput.value||"(unnamed)", pct});
+      LS.set(KEYS.case(m.id), arr);
+      document.getElementById("caseResult").innerHTML = `<div class="score-banner ${pct>=80?"pass":"fail"}">Case score ${pct}% (${correct}/${m.caseStudy.questions.length}).</div>`;
+      window.scrollTo({top:0, behavior:"smooth"});
+    });
+  }
+  if(step==="certificate"){
+    const btn = document.getElementById("genCertBtn");
+    if(btn && !btn.disabled) btn.addEventListener("click", ()=> generateCertificate(m));
+    document.querySelectorAll(".reprint-cert-btn").forEach(b=> b.addEventListener("click", ()=>{
+      const cert = LS.get(KEYS.cert(m.id), []).find(c=>c.id===b.dataset.id);
+      if(cert) printCertificateWindow(m, cert);
+    }));
+  }
+}
+
+function printCertificateWindow(m, rec){
+  const gain = rec.postScore - rec.preScore;
+  const win = window.open("", "_blank");
+  win.document.write(`<html><head><title>Certificate — ${m.name} — ${rec.staff}</title>
+    <style>body{font-family:Georgia,serif; padding:50px; text-align:center; color:#1c3144;}
+    .cert{border:8px double #0e7c86; padding:50px; border-radius:14px;}
+    h1{font-size:1.2rem; letter-spacing:.1em; text-transform:uppercase; color:#5b6b76;}
+    .name{font-size:2rem; font-weight:700; margin:20px 0; color:#0a5c64;}
+    .role{font-size:.95rem; color:#5b6b76; margin-top:-14px; margin-bottom:14px;}
+    .module{font-size:1.3rem; margin-bottom:20px;}
+    .scores{font-size:1rem; margin:20px 0;}
+    .sig{margin-top:60px; display:flex; justify-content:space-around;}
+    .sig div{border-top:1px solid #333; padding-top:6px; width:200px; font-size:.85rem;}
+    .no-print{margin-top:20px;}
+    @media print{ .no-print{display:none;} }
+    </style></head><body>
+    <div class="cert">
+      <h1>Certificate of Completion</h1>
+      <div class="name">${rec.staff}</div>
+      <div class="role">${rec.role||""}</div>
+      <div>has successfully completed the learning pathway for</div>
+      <div class="module"><strong>${m.full} (${m.name})</strong></div>
+      <div class="scores">Pre-test: ${rec.preScore}% &nbsp;→&nbsp; Post-test: ${rec.postScore}% &nbsp;(${gain>=0?"+":""}${gain} points improvement)</div>
+      <div>Date issued: ${rec.date}</div>
+      <div class="sig"><div>Staff signature</div><div>Nurse Educator / Supervisor</div></div>
+    </div>
+    <div class="no-print"><button onclick="window.print()">Print / Save as PDF</button></div>
+    </body></html>`);
+  win.document.close();
+  setTimeout(()=> win.print(), 300);
+}
+
+function generateCertificate(m){
+  const staff = staffInput.value || "(unnamed staff)";
+  const role = roleInput.value || "";
+  const preBest = bestScore(KEYS.pre(m.id));
+  const postBest = bestScore(KEYS.post(m.id));
+  const rec = {id: uid(), date:todayStr(), staff, role, preScore:preBest, postScore:postBest, improvement: postBest-preBest};
+  const arr = LS.get(KEYS.cert(m.id), []);
+  arr.push(rec);
+  LS.set(KEYS.cert(m.id), arr);
+  pushRow("Certificates", {DateIssued:rec.date, Staff:rec.staff, Role:rec.role||"", Module:m.name, PreTestPct:rec.preScore, PostTestPct:rec.postScore, ImprovementPts:rec.improvement});
+  printCertificateWindow(m, rec);
+  openModuleDetail(m.id, "certificate");
+}
+
+function renderModuleAnalytics(m){
+  const el = document.getElementById("analyticsBlock");
+  const preArr = LS.get(KEYS.pre(m.id), []);
+  const postArr = LS.get(KEYS.post(m.id), []);
+  const all = preArr.concat(postArr);
+  if(!all.length){ el.innerHTML = `<h4>Learning analytics</h4><p class="empty-state">No attempts logged yet for this module.</p>`; return; }
+  const avg = Math.round(all.reduce((s,a)=>s+a.pct,0)/all.length);
+  const passRate = Math.round(100*all.filter(a=>a.pct>=80).length/all.length);
+  const missCount = {};
+  all.forEach(a=> (a.missed||[]).forEach(qi=>{ missCount[qi]=(missCount[qi]||0)+1; }));
+  let mostMissed = "—";
+  const missEntries = Object.entries(missCount).sort((a,b)=>b[1]-a[1]);
+  if(missEntries.length) mostMissed = m.quiz[+missEntries[0][0]].q.slice(0,70)+(m.quiz[+missEntries[0][0]].q.length>70?"…":"");
+  const totalTimeMin = Math.round(all.reduce((s,a)=>s+(a.timeSpentSec||0),0)/60);
+  el.innerHTML = `<h4>Learning analytics</h4>
+    <div class="kpi-row">
+      <div class="kpi"><div class="num">${avg}%</div><div class="lbl">Average score</div></div>
+      <div class="kpi"><div class="num">${passRate}%</div><div class="lbl">Pass rate (≥80%)</div></div>
+      <div class="kpi"><div class="num">${totalTimeMin}m</div><div class="lbl">Time spent learning</div></div>
+    </div>
+    <p style="font-size:.85rem;"><strong>Most missed question:</strong> ${mostMissed}</p>`;
+}
+function renderCompetencyTab(){ renderCompRegister(); }
+
+function renderCompForm(){
+  const wrap = document.getElementById("compForm");
+  wrap.classList.remove("hidden");
+  wrap.innerHTML = `<div class="module-block">
+    <h3>New competency assessment</h3>
+    <div class="form-row">
+      <div class="form-field"><label>Staff name</label><input type="text" id="compStaff" value="${(staffInput.value||"").replace(/"/g,'&quot;')}"></div>
+      <div class="form-field"><label>Role</label><input type="text" id="compRole" value="${(roleInput.value||"").replace(/"/g,'&quot;')}"></div>
+      <div class="form-field"><label>Module / procedure</label>
+        <select id="compModule">${MODULES.map(m=>`<option value="${m.id}">${m.name}</option>`).join("")}</select>
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-field"><label>Assessor</label><input type="text" id="compAssessor" placeholder="e.g., Nurse Educator name"></div>
+      <div class="form-field"><label>Assessor role</label>
+        <select id="compAssessorRole"><option>Consultant</option><option>Nurse Educator</option><option>Infection Control Nurse</option><option>Peer Auditor</option><option>Self-Assessment</option></select>
+      </div>
+      <div class="form-field"><label>Assessment date</label><input type="date" id="compDate" value="${todayStr()}"></div>
+      <div class="form-field"><label>Expiry date</label><input type="date" id="compExpiry" value="${addDays(todayStr(),365)}"></div>
+    </div>
+    <div class="form-row">
+      <div class="form-field"><label>Observed procedure status</label>
+        <select id="compStatus"><option>Needs supervision</option><option>Competent</option><option>Trainer certified</option></select>
+      </div>
+    </div>
+    <div class="btn-row">
+      <button class="btn" id="saveCompBtn">Save assessment</button>
+      <button class="btn ghost" id="cancelCompBtn">Cancel</button>
+    </div>
+  </div>`;
+  document.getElementById("cancelCompBtn").addEventListener("click", ()=>{ wrap.classList.add("hidden"); wrap.innerHTML=""; });
+  document.getElementById("saveCompBtn").addEventListener("click", ()=>{
+    const mId = document.getElementById("compModule").value;
+    const mObj = MODULES.find(x=>x.id===mId);
+    const rec = {
+      id: uid(),
+      staff: document.getElementById("compStaff").value || "(unnamed)",
+      role: document.getElementById("compRole").value,
+      moduleId: mId, moduleName: mObj.name,
+      assessor: document.getElementById("compAssessor").value,
+      assessorRole: document.getElementById("compAssessorRole").value,
+      date: document.getElementById("compDate").value || todayStr(),
+      expiry: document.getElementById("compExpiry").value || addDays(todayStr(),365),
+      status: document.getElementById("compStatus").value,
+      knowledgePct: bestScore(KEYS.post(mId))
+    };
+    const list = LS.get(KEYS.comp, []);
+    list.push(rec);
+    LS.set(KEYS.comp, list);
+    pushRow("Competency", {Date:rec.date, Staff:rec.staff, Role:rec.role||"", Module:rec.moduleName, Assessor:rec.assessor||"", AssessorRole:rec.assessorRole||"", Status:rec.status, Expiry:rec.expiry});
+    wrap.classList.add("hidden"); wrap.innerHTML="";
+    renderCompRegister();
+  });
+}
+document.getElementById("newCompBtn").addEventListener("click", renderCompForm);
+
+function renderCompRegister(){
+  const wrap = document.getElementById("compRegisterWrap");
+  const list = LS.get(KEYS.comp, []).slice().sort((a,b)=> a.expiry.localeCompare(b.expiry));
+  if(!list.length){ wrap.innerHTML = `<h4>Register</h4><p class="empty-state">No competency assessments logged yet.</p>`; return; }
+  const today = todayStr();
+  const rows = list.map(r=>{
+    const overdue = r.expiry < today;
+    const dueSoon = !overdue && daysBetween(today, r.expiry) <= 60;
+    const cls = overdue ? "overdue" : dueSoon ? "due-soon" : "";
+    const statusBadge = r.status==="Trainer certified" ? `<span class="pill good">Trainer certified</span>` : r.status==="Competent" ? `<span class="pill good">Competent</span>` : `<span class="pill warn">Needs supervision</span>`;
+    return `<tr class="${cls}"><td>${r.staff}</td><td>${r.role||"—"}</td><td>${r.moduleName}</td><td>${r.knowledgePct!==null?r.knowledgePct+"%":"—"}</td><td>${statusBadge}</td><td>${r.assessor||"—"} (${r.assessorRole||"—"})</td><td>${r.date}</td><td>${r.expiry}${overdue?" ⚠ overdue":dueSoon?" ⏳ due soon":""}</td><td><button class="btn ghost small delete-comp" data-id="${r.id}">Delete</button></td></tr>`;
+  }).join("");
+  wrap.innerHTML = `<h4>Register</h4>
+    <table class="history"><thead><tr><th>Staff</th><th>Role</th><th>Module</th><th>Knowledge</th><th>Procedure status</th><th>Assessor</th><th>Date</th><th>Expiry</th><th></th></tr></thead>
+    <tbody>${rows}</tbody></table>`;
+  wrap.querySelectorAll(".delete-comp").forEach(btn=> btn.addEventListener("click", ()=>{
+    let list2 = LS.get(KEYS.comp, []);
+    list2 = list2.filter(r=>r.id!==btn.dataset.id);
+    LS.set(KEYS.comp, list2);
+    renderCompRegister();
+  }));
+}
+function flatItems(a){ const out=[]; a.groups.forEach(g=> g.items.forEach(it=> out.push(it))); return out; }
+function auditHistory(auditId){ return LS.get(KEYS.audit(auditId), []); }
+function auditCompliance(auditId){ const h=auditHistory(auditId); return h.length? h[h.length-1].pct : null; }
+function auditHistoryPoints(auditId){ return auditHistory(auditId).map(h=>({label:h.date.slice(5), value:h.pct})); }
+
+function renderAuditGrid(){
+  const grid = document.getElementById("auditGrid");
+  grid.innerHTML = "";
+  AUDITS.forEach(a=>{
+    const pct = auditCompliance(a.id);
+    const history = auditHistory(a.id);
+    const card = document.createElement("div");
+    card.className = "card topic-card";
+    card.style.borderTopColor = a.color;
+    card.innerHTML = `
+      <span class="topic-icon">${a.icon}</span>
+      <h3>${a.name}</h3>
+      ${ pct===null ? `<span class="pill neutral">No audits yet</span>` : (pct>=90?`<span class="pill good">${pct}% latest</span>`:pct>=75?`<span class="pill warn">${pct}% latest</span>`:`<span class="pill bad">${pct}% latest</span>`) }
+      <div class="stat-row"><span>Total audits</span><span>${history.length}</span></div>
+    `;
+    card.addEventListener("click", ()=> openAuditDetail(a.id));
+    grid.appendChild(card);
+  });
+}
+
+function computeAnswerStats(answers, items){
+  let yes=0, no=0; const failedCritical=[];
+  items.forEach((it,i)=>{ const v = answers["item_"+i]; if(v==="yes") yes++; else if(v==="no"){ no++; if(it.critical) failedCritical.push(it.t); } });
+  const denom = yes+no;
+  return {pct: denom? Math.round((yes/denom)*100) : 100, failedCritical};
+}
+function computeGroupPct(a, answers){
+  let idx=0; const out={};
+  a.groups.forEach(g=>{
+    let yes=0,no=0;
+    g.items.forEach(()=>{ const v=answers["item_"+idx]; if(v==="yes") yes++; else if(v==="no") no++; idx++; });
+    out[g.title] = (yes+no)? Math.round(100*yes/(yes+no)) : null;
+  });
+  return out;
+}
+
+function openAuditDetail(auditId){
+  const a = AUDITS.find(x=>x.id===auditId);
+  document.getElementById("auditList").classList.add("hidden");
+  const detail = document.getElementById("auditDetail");
+  detail.classList.remove("hidden");
+  const items = flatItems(a);
+
+  let itemIndex = 0;
+  let groupsHtml = a.groups.map(g=>{
+    let itemsHtml = g.items.map(item=>{
+      const name = "item_"+(itemIndex++);
+      return `<div class="audit-item ${item.critical?"critical":""}" data-name="${name}">
+        <span class="item-text">${item.t}</span>
+        <div class="audit-choice">
+          <label class="yes-lbl"><input type="radio" name="${name}" value="yes"><span>Yes</span></label>
+          <label class="no-lbl"><input type="radio" name="${name}" value="no"><span>No</span></label>
+          <label class="na-lbl"><input type="radio" name="${name}" value="na"><span>N/A</span></label>
+        </div>
+      </div>`;
+    }).join("");
+    return `<div class="section-heading-sm">${g.title}</div>${itemsHtml}`;
+  }).join("");
+
+  const history = auditHistory(auditId);
+  let historyRows = history.slice().reverse().map(h=>`
+    <tr><td>${h.date}</td><td>${h.auditor}</td><td>${h.unit||"—"}</td><td>${h.observedBy||"—"}</td><td>${h.pct}%</td><td><button class="btn ghost small delete-audit" data-id="${h.id}">Delete</button></td></tr>
+  `).join("");
+
+  const settings = getSettings();
+  const bestMonth = history.length? Math.max(...history.map(h=>h.pct)) : null;
+  const groupBars = a.groups.map(g=>{
+    const latestRec = history[history.length-1];
+    const gp = latestRec ? (latestRec.groupPct||{})[g.title] : null;
+    return `<div class="stat-row"><span>${g.title}</span><span>${gp!==null&&gp!==undefined?gp+"%":"—"}</span></div>`;
+  }).join("");
+  let weakest = "—";
+  if(history.length){
+    const latestRec = history[history.length-1];
+    const gp = latestRec.groupPct || {};
+    const entries = Object.entries(gp).filter(([,v])=>v!==null);
+    if(entries.length){ entries.sort((x,y)=>x[1]-y[1]); weakest = entries[0][0]+" ("+entries[0][1]+"%)"; }
+  }
+
+  detail.innerHTML = `
+    <button class="back-link" id="backToAudits">&larr; Back to audit tools</button>
+    <div class="module-header">
+      <span class="topic-icon">${a.icon}</span>
+      <h2 style="margin:0;">${a.name}</h2>
+    </div>
+    <div id="criticalAlertWrap"></div>
+    <div class="module-block">
+      <form id="auditForm">
+        <div class="form-row">
+          <div class="form-field"><label>Audit date</label><input type="date" id="auditDate" value="${todayStr()}"></div>
+          <div class="form-field"><label>Auditor</label><input type="text" id="auditAuditor" value="${staffInput.value||""}" placeholder="Auditor name"></div>
+          <div class="form-field"><label>Unit / Shift</label><input type="text" id="auditUnit" placeholder="e.g., NICU Bay 2, Night shift"></div>
+          <div class="form-field"><label>Observed by</label>
+            <select id="auditObserver"><option>Self-Audit</option><option>Peer Auditor</option><option>Nurse Educator</option><option>Infection Control Nurse</option><option>Consultant</option></select>
+          </div>
+        </div>
+        ${groupsHtml}
+        <div class="btn-row"><button type="submit" class="btn">Save audit</button></div>
+      </form>
+    </div>
+
+    <div class="module-block">
+      <h4>Immediate compliance breakdown</h4>
+      <div class="stat-row"><strong>Overall</strong><strong>${history.length? history[history.length-1].pct+"%" : "—"}</strong></div>
+      ${groupBars}
+      <div class="stat-row"><span>Weakest domain</span><span>${weakest}</span></div>
+    </div>
+
+    <div class="module-block">
+      <h4>Benchmarking</h4>
+      <div class="kpi-row">
+        <div class="kpi"><div class="num">${history.length? history[history.length-1].pct+"%" : "—"}</div><div class="lbl">Current</div></div>
+        <div class="kpi"><div class="num">${settings.target}%</div><div class="lbl">Hospital target</div></div>
+        <div class="kpi"><div class="num">${settings.national}%</div><div class="lbl">National average</div></div>
+        <div class="kpi"><div class="num">${bestMonth!==null?bestMonth+"%":"—"}</div><div class="lbl">Best audit</div></div>
+      </div>
+    </div>
+
+    <div class="chart-wrap"><strong>Compliance trend</strong><canvas class="trend" id="auditTrendCanvas" height="160"></canvas></div>
+    <div class="chart-wrap"><strong>Control chart (X-mR)</strong><canvas class="chartbox" id="auditControlCanvas" height="200"></canvas></div>
+    <div class="chart-wrap"><strong>Heatmap — % "Yes" by month and item (last 6 months)</strong><div id="auditHeatmapWrap"></div></div>
+    <div class="chart-wrap"><strong>Pareto — most frequent failed items</strong><canvas class="chartbox" id="auditParetoCanvas" height="220"></canvas></div>
+
+    <div class="module-block">
+      <div class="btn-row no-print" style="margin-top:0;"><button class="btn secondary small" id="exportCsvBtn">⬇ Export history (.csv)</button></div>
+      <h4>Audit history</h4>
+      ${ history.length ? `<table class="history"><thead><tr><th>Date</th><th>Auditor</th><th>Unit/Shift</th><th>Observed by</th><th>Compliance</th><th></th></tr></thead><tbody>${historyRows}</tbody></table>` : `<p class="empty-state">No audits logged yet for this bundle.</p>` }
+    </div>
+  `;
+
+  requestAnimationFrame(()=>{
+    drawTrendChart(document.getElementById("auditTrendCanvas"), auditHistoryPoints(auditId), getComputedColor(a.color));
+    drawControlChart(document.getElementById("auditControlCanvas"), auditHistoryPoints(auditId));
+    const months = [...new Set(history.map(h=>h.date.slice(0,7)))].slice(-6);
+    const matrix = items.map((it,i)=> months.map(mo=>{
+      const recs = history.filter(h=>h.date.slice(0,7)===mo);
+      let yes=0,no=0; recs.forEach(r=>{ const v=r.answers["item_"+i]; if(v==="yes")yes++; else if(v==="no")no++; });
+      return (yes+no)? Math.round(100*yes/(yes+no)) : null;
+    }));
+    renderHeatmap(document.getElementById("auditHeatmapWrap"), months.length?months:["—"], items.map(it=>it.t), months.length?matrix:items.map(()=>[null]));
+    const failCounts = items.map((it,i)=>({label:it.t, count: history.reduce((s,h)=> s+(h.answers["item_"+i]==="no"?1:0),0)})).filter(x=>x.count>0).sort((x,y)=>y.count-x.count);
+    drawParetoChart(document.getElementById("auditParetoCanvas"), failCounts);
+  });
+
+  document.getElementById("backToAudits").addEventListener("click", ()=>{ detail.classList.add("hidden"); document.getElementById("auditList").classList.remove("hidden"); renderAuditGrid(); });
+
+  document.getElementById("auditForm").addEventListener("submit", (e)=>{
+    e.preventDefault();
+    const answers = {}; let missing=false;
+    document.querySelectorAll("#auditForm .audit-item").forEach(itemEl=>{
+      const name = itemEl.dataset.name;
+      const checked = itemEl.querySelector(`input[name="${name}"]:checked`);
+      if(!checked){ missing=true; itemEl.style.outline="1px solid var(--bad)"; }
+      else { itemEl.style.outline=""; answers[name]=checked.value; }
+    });
+    if(missing){ alert("Please mark Yes / No / N/A for every item before saving."); return; }
+    const stats = computeAnswerStats(answers, items);
+    const groupPct = computeGroupPct(a, answers);
+    const record = {
+      id: uid(), date: document.getElementById("auditDate").value || todayStr(),
+      auditor: document.getElementById("auditAuditor").value || "(unnamed)",
+      unit: document.getElementById("auditUnit").value,
+      observedBy: document.getElementById("auditObserver").value,
+      pct: stats.pct, answers, groupPct, criticalFail: stats.failedCritical
+    };
+    const hist = auditHistory(auditId); hist.push(record); LS.set(KEYS.audit(auditId), hist);
+    pushRow("Audits", {Date:record.date, Bundle:a.name, Auditor:record.auditor, ObservedBy:record.observedBy||"", Unit:record.unit||"", CompliancePct:record.pct, CriticalFail:(record.criticalFail||[]).join("; ")});
+    if(stats.failedCritical.length){
+      document.getElementById("criticalAlertWrap").innerHTML = `<div class="alert-box">⚠ High-risk element missed: ${stats.failedCritical.join(", ")}. Recommendation: re-educate staff on this bundle element and consider a focused re-audit within 2 weeks.</div>`;
+    }
+    openAuditDetail(auditId);
+  });
+
+  detail.addEventListener("click", (e)=>{
+    if(e.target.classList.contains("delete-audit")){
+      const id = e.target.dataset.id;
+      let hist = auditHistory(auditId).filter(h=>h.id!==id);
+      LS.set(KEYS.audit(auditId), hist);
+      openAuditDetail(auditId);
+    }
+  });
+  document.getElementById("exportCsvBtn").addEventListener("click", ()=> exportAuditCsv(auditId));
+}
+
+function exportAuditCsv(auditId){
+  const a = AUDITS.find(x=>x.id===auditId);
+  const history = auditHistory(auditId);
+  if(!history.length){ alert("No audit history to export yet."); return; }
+  const items = flatItems(a);
+  let csv = ["Date","Auditor","Unit/Shift","Observed by","Compliance %", ...items.map(i=>'"'+i.t.replace(/"/g,'""')+'"')].join(",")+"\n";
+  history.forEach(h=>{
+    const row = [h.date, '"'+h.auditor+'"', '"'+(h.unit||"")+'"', '"'+(h.observedBy||"")+'"', h.pct];
+    items.forEach((_,i)=> row.push(h.answers["item_"+i]||""));
+    csv += row.join(",")+"\n";
+  });
+  downloadFile(a.id+"_audit_history.csv", csv, "text/csv");
+}
+const AUDIT_ID_BY_TYPE = {CLABSI:"clabsi", VAP:"vap", NEC:"nec"};
+
+function findNearestAudit(type, eventDate){
+  const auditId = AUDIT_ID_BY_TYPE[type];
+  if(!auditId || !eventDate) return null;
+  const hist = auditHistory(auditId).filter(h=> h.date <= eventDate);
+  if(!hist.length) return null;
+  hist.sort((a,b)=> a.date.localeCompare(b.date));
+  return {auditId, record: hist[hist.length-1]};
+}
+function failedItemsOf(auditId, record){
+  const a = AUDITS.find(x=>x.id===auditId);
+  const items = flatItems(a);
+  const failed=[];
+  items.forEach((it,i)=>{ if(record.answers["item_"+i]==="no") failed.push(it.t); });
+  return failed;
+}
+
+function detectRecurrence(){
+  const records = LS.get(KEYS.rca, []);
+  const tally = {}; // type|factorKey -> count
+  records.forEach(r=>{
+    Object.entries(r.factors||{}).forEach(([k,v])=>{ if(v){ const key=r.type+"||"+k; tally[key]=(tally[key]||0)+1; } });
+  });
+  return Object.entries(tally).filter(([,c])=>c>=3).map(([k,c])=>{
+    const [type,factorKey] = k.split("||");
+    return {type, factorKey: factorKey.split("|")[1], count:c};
+  });
+}
+
+function renderRcaHistory(){
+  const recur = detectRecurrence();
+  const bannerHtml = recur.length ? `<div class="recur-box">🔁 Recurrent root cause detected: ${recur.map(r=>`"${r.factorKey}" implicated in ${r.count} ${r.type} cases`).join("; ")}. Consider a system-level corrective action.</div>` : "";
+  document.getElementById("recurBannerRca").innerHTML = bannerHtml;
+
+  const list = document.getElementById("rcaHistoryList");
+  const records = LS.get(KEYS.rca, []).slice().reverse();
+  if(!records.length){ list.innerHTML = `<p class="empty-state">No RCAs logged yet. Click "+ New RCA" above to start one.</p>`; return; }
+  const colorMap = {CLABSI:"var(--clabsi)", VAP:"var(--vap)", NEC:"var(--nec)"};
+  list.innerHTML = records.map(r=>{
+    const openActions = (r.actions||[]).filter(a=>a.status!=="Complete" && a.status!=="Closed").length;
+    return `<div class="card">
+      <span class="tag" style="background:${colorMap[r.type]}">${r.type}</span>
+      <strong style="margin-left:8px;">${r.refNo || "(no reference)"}</strong>
+      <div class="stat-row"><span>Event date: ${r.eventDate}</span><span>${openActions} open CAPA action(s)</span></div>
+      <p style="font-size:.82rem; color:var(--muted); margin:8px 0;">${(r.rootCause||"No root cause statement recorded yet.").slice(0,160)}</p>
+      <div class="btn-row no-print">
+        <button class="btn secondary small view-rca" data-id="${r.id}">View / Edit</button>
+        <button class="btn ghost small print-rca" data-id="${r.id}">Print</button>
+        <button class="btn danger small delete-rca" data-id="${r.id}">Delete</button>
+      </div>
+    </div>`;
+  }).join("");
+
+  list.querySelectorAll(".view-rca").forEach(btn=> btn.addEventListener("click", ()=>{
+    const rec = LS.get(KEYS.rca, []).find(r=>r.id===btn.dataset.id);
+    renderRcaForm(rec);
+    document.getElementById("rcaForm").scrollIntoView({behavior:"smooth"});
+  }));
+  list.querySelectorAll(".delete-rca").forEach(btn=> btn.addEventListener("click", ()=>{
+    if(!confirm("Delete this RCA record? This cannot be undone.")) return;
+    let records2 = LS.get(KEYS.rca, []).filter(r=>r.id!==btn.dataset.id);
+    LS.set(KEYS.rca, records2);
+    renderRcaHistory();
+  }));
+  list.querySelectorAll(".print-rca").forEach(btn=> btn.addEventListener("click", ()=> printRca(btn.dataset.id)));
+}
+
+document.getElementById("newRcaBtn").addEventListener("click", ()=> renderRcaForm());
+
+function newActionRow(){ return {type:"Corrective", action:"", owner:"", due:"", status:"Open", evidence:"", outcome:"", closedDate:""}; }
+
+function renderRcaForm(existing){
+  const wrap = document.getElementById("rcaForm");
+  wrap.classList.remove("hidden");
+  const rec = existing ? JSON.parse(JSON.stringify(existing)) : {
+    id: uid(), type:"CLABSI", refNo:"", eventDate: todayStr(), gaWeeks:"", cgaAtEvent:"", deviceDays:"",
+    timeline:[{when:"", what:""}], whys:["","","","",""], factors:{}, weights:{},
+    rootCause:"", contributing:"", actions:[newActionRow()],
+    followUp:{d30:{date:"",done:false}, d60:{date:"",done:false}, d90:{date:"",done:false}}, followUpNotes:"",
+    linkedAuditId:"", linkedAuditDate:""
+  };
+  if(!rec.timeline) rec.timeline=[{when:"",what:""}];
+  if(!rec.weights) rec.weights={};
+  if(!rec.followUp) rec.followUp={d30:{date:"",done:false}, d60:{date:"",done:false}, d90:{date:"",done:false}};
+
+  function timelineRowsHtml(){
+    return rec.timeline.map((t,i)=>`<div class="tl-row" data-i="${i}">
+      <input type="text" class="tl-when-in" placeholder="e.g., Day 1 08:00" value="${(t.when||"").replace(/"/g,'&quot;')}">
+      <input type="text" class="tl-what-in" placeholder="What happened" value="${(t.what||"").replace(/"/g,'&quot;')}">
+      <button type="button" class="btn ghost small remove-tl">✕</button>
+    </div>`).join("");
+  }
+  function timelinePreview(){
+    const entries = rec.timeline.filter(t=>t.when||t.what);
+    if(!entries.length) return `<p class="empty-state">Add timeline entries above to see the visual timeline.</p>`;
+    return `<div class="timeline-vis">${entries.map(t=>`<div class="tl-entry"><div class="tl-when">${t.when||"—"}</div><div class="tl-what">${t.what||""}</div></div>`).join("")}</div>`;
+  }
+
+  function factorsHtml(){
+    const cats = RCA_FACTORS[rec.type];
+    return cats.map(c=>`
+      <div class="factor-cat">
+        <h5>${c.cat}</h5>
+        ${c.items.map(it=>{
+          const key = c.cat+"|"+it;
+          const checked = rec.factors[key] ? "checked" : "";
+          const w = rec.weights[key] || {likelihood:2, impact:2};
+          return `<label class="chk"><input type="checkbox" class="factor-chk" data-key="${key.replace(/"/g,'&quot;')}" ${checked}> <span>${it}</span></label>
+          <div class="weight-selects ${checked?"":"hidden"}" data-wkey="${key.replace(/"/g,'&quot;')}">
+            Likelihood <select class="wk-likelihood"><option value="1" ${w.likelihood==1?"selected":""}>Low</option><option value="2" ${w.likelihood==2?"selected":""}>Medium</option><option value="3" ${w.likelihood==3?"selected":""}>High</option></select>
+            Impact <select class="wk-impact"><option value="1" ${w.impact==1?"selected":""}>Low</option><option value="2" ${w.impact==2?"selected":""}>Medium</option><option value="3" ${w.impact==3?"selected":""}>High</option></select>
+          </div>`;
+        }).join("")}
+      </div>
+    `).join("");
+  }
+
+  function actionsHtml(){
+    return rec.actions.map((act,i)=>`
+      <div class="action-row" data-i="${i}">
+        <input type="text" class="act-action" placeholder="Action" value="${(act.action||"").replace(/"/g,'&quot;')}">
+        <select class="act-type"><option ${act.type==="Corrective"?"selected":""}>Corrective</option><option ${act.type==="Preventive"?"selected":""}>Preventive</option></select>
+        <input type="text" class="act-owner" placeholder="Owner" value="${(act.owner||"").replace(/"/g,'&quot;')}">
+        <input type="date" class="act-due" value="${act.due||""}">
+        <select class="act-status"><option ${act.status==="Open"?"selected":""}>Open</option><option ${act.status==="In progress"?"selected":""}>In progress</option><option ${act.status==="Complete"?"selected":""}>Complete</option><option ${act.status==="Closed"?"selected":""}>Closed</option></select>
+        <input type="text" class="act-evidence" placeholder="Evidence (e.g., PDF on file)" value="${(act.evidence||"").replace(/"/g,'&quot;')}">
+        <button type="button" class="btn ghost small remove-action">✕</button>
+      </div>
+    `).join("");
+  }
+
+  function linkedAuditHtml(){
+    const nearest = findNearestAudit(rec.type, rec.eventDate);
+    if(!nearest) return `<p class="empty-state">No prior audit found for ${rec.type} before this event date.</p>`;
+    const failed = failedItemsOf(nearest.auditId, nearest.record);
+    return `<p style="font-size:.85rem;">Nearest prior audit: <strong>${nearest.record.date}</strong> — compliance ${nearest.record.pct}%.</p>
+      ${failed.length? `<p style="font-size:.82rem;"><strong>Failed items:</strong> ${failed.join("; ")}</p><button type="button" class="btn secondary small" id="importFailedBtn">Import failed items as contributing factors</button>` : `<p class="empty-state">No failed items on that audit.</p>`}`;
+  }
+
+  function weightBreakdownHtml(){
+    const scores = {};
+    Object.entries(rec.factors).forEach(([k,v])=>{ if(v){ const cat=k.split("|")[0]; const w=rec.weights[k]||{likelihood:2,impact:2}; scores[cat]=(scores[cat]||0)+w.likelihood*w.impact; } });
+    const total = Object.values(scores).reduce((s,v)=>s+v,0);
+    if(!total) return `<p class="empty-state">Check contributing factors above to see weighted category breakdown.</p>`;
+    return Object.entries(scores).sort((a,b)=>b[1]-a[1]).map(([cat,v])=>`<div class="stat-row"><span>${cat}</span><span>${Math.round(100*v/total)}%</span></div>`).join("");
+  }
+
+  wrap.innerHTML = `
+    <div class="module-block">
+      <h3>${existing? "Edit RCA" : "New RCA"}</h3>
+      <div class="form-row">
+        <div class="form-field"><label>Infection type</label>
+          <select id="rcaType">
+            <option value="CLABSI" ${rec.type==="CLABSI"?"selected":""}>CLABSI</option>
+            <option value="VAP" ${rec.type==="VAP"?"selected":""}>VAP</option>
+            <option value="NEC" ${rec.type==="NEC"?"selected":""}>NEC</option>
+          </select>
+        </div>
+        <div class="form-field"><label>Case reference # (no identifiers)</label><input type="text" id="rcaRef" value="${(rec.refNo||"").replace(/"/g,'&quot;')}" placeholder="e.g., Case-2026-014"></div>
+        <div class="form-field"><label>Event date</label><input type="date" id="rcaDate" value="${rec.eventDate}"></div>
+      </div>
+      <div class="form-row">
+        <div class="form-field"><label>Gestational age at birth (wks)</label><input type="text" id="rcaGA" value="${rec.gaWeeks}"></div>
+        <div class="form-field"><label>Corrected GA at event (wks)</label><input type="text" id="rcaCGA" value="${rec.cgaAtEvent}"></div>
+        <div class="form-field"><label>Device/risk days (line, vent, or feeds days)</label><input type="text" id="rcaDeviceDays" value="${rec.deviceDays}"></div>
+      </div>
+
+      <div class="section-heading-sm">Linked audit (nearest prior compliance audit)</div>
+      <div id="linkedAuditArea">${linkedAuditHtml()}</div>
+
+      <div class="section-heading-sm">Timeline builder</div>
+      <div id="tlRows">${timelineRowsHtml()}</div>
+      <button type="button" class="btn ghost small" id="addTlBtn">+ Add timeline entry</button>
+      <div id="tlPreview">${timelinePreview()}</div>
+
+      <div class="section-heading-sm">5 Whys</div>
+      <div id="whyRows">
+        ${rec.whys.map((w,i)=>`<div class="why-row"><span class="why-num">${i+1}</span><input type="text" class="why-input" data-i="${i}" style="flex:1; padding:8px 10px; border:1px solid var(--line); border-radius:8px;" placeholder="Why did this happen?" value="${(w||"").replace(/"/g,'&quot;')}"></div>`).join("")}
+        <div class="why-row"><span class="why-num" style="background:var(--navy);">RC</span><input type="text" id="rcaRootCauseInline" style="flex:1; padding:8px 10px; border:1px solid var(--line); border-radius:8px; font-weight:700;" placeholder="Root cause (synthesized)" value="${(rec.rootCause||"").replace(/"/g,'&quot;')}"></div>
+      </div>
+
+      <div class="section-heading-sm">Contributing factors (fishbone categories) — check factors, then rate likelihood/impact</div>
+      <div id="factorArea">${factorsHtml()}</div>
+
+      <div class="section-heading-sm">Auto-generated fishbone diagram</div>
+      <div class="chart-wrap" id="fishboneWrap"></div>
+
+      <div class="section-heading-sm">Weighted top contributing categories</div>
+      <div class="chart-wrap" id="weightBreakdownWrap">${weightBreakdownHtml()}</div>
+
+      <div class="form-field" style="margin:14px 0;"><label>Additional contributing-factor notes</label><textarea id="rcaContributing" rows="2">${rec.contributing||""}</textarea></div>
+
+      <div class="section-heading-sm">Corrective / Preventive Action Plan (CAPA)</div>
+      <div id="actionRows">${actionsHtml()}</div>
+      <button type="button" class="btn ghost small" id="addActionBtn">+ Add action</button>
+
+      <div class="section-heading-sm">Verification audits (auto-scheduled)</div>
+      <div class="form-row">
+        <div class="form-field"><label>30-day check</label><input type="date" id="vf30" value="${rec.followUp.d30.date || addDays(rec.eventDate,30)}"> <label><input type="checkbox" id="vf30done" ${rec.followUp.d30.done?"checked":""}> Done</label></div>
+        <div class="form-field"><label>60-day check</label><input type="date" id="vf60" value="${rec.followUp.d60.date || addDays(rec.eventDate,60)}"> <label><input type="checkbox" id="vf60done" ${rec.followUp.d60.done?"checked":""}> Done</label></div>
+        <div class="form-field"><label>90-day check</label><input type="date" id="vf90" value="${rec.followUp.d90.date || addDays(rec.eventDate,90)}"> <label><input type="checkbox" id="vf90done" ${rec.followUp.d90.done?"checked":""}> Done</label></div>
+      </div>
+      <div class="form-field"><label>Follow-up notes</label><input type="text" id="rcaFollowUpNotes" value="${(rec.followUpNotes||"").replace(/"/g,'&quot;')}"></div>
+
+      <div class="btn-row">
+        <button class="btn" id="saveRcaBtn">Save RCA</button>
+        <button class="btn ghost" id="cancelRcaBtn">Cancel</button>
+      </div>
+    </div>
+  `;
+
+  requestAnimationFrame(()=>{
+    const byCat={};
+    Object.entries(rec.factors).forEach(([k,v])=>{ if(v){ const [cat,item]=k.split("|"); (byCat[cat]=byCat[cat]||[]).push(item); } });
+    renderFishbone(document.getElementById("fishboneWrap"), rec.type, byCat);
+  });
+
+  function refreshFactorArea(){ document.getElementById("factorArea").innerHTML = factorsHtml(); wireFactorArea(); refreshFishboneAndWeights(); }
+  function refreshFishboneAndWeights(){
+    const byCat={};
+    Object.entries(rec.factors).forEach(([k,v])=>{ if(v){ const [cat,item]=k.split("|"); (byCat[cat]=byCat[cat]||[]).push(item); } });
+    renderFishbone(document.getElementById("fishboneWrap"), rec.type, byCat);
+    document.getElementById("weightBreakdownWrap").innerHTML = weightBreakdownHtml();
+  }
+  function wireFactorArea(){
+    document.querySelectorAll(".factor-chk").forEach(chk=>{
+      chk.addEventListener("change", ()=>{
+        rec.factors[chk.dataset.key] = chk.checked;
+        const ws = Array.from(document.querySelectorAll(".weight-selects")).find(el=> el.dataset.wkey===chk.dataset.key);
+        if(ws) ws.classList.toggle("hidden", !chk.checked);
+        refreshFishboneAndWeights();
+      });
+    });
+    document.querySelectorAll(".wk-likelihood, .wk-impact").forEach(sel=>{
+      sel.addEventListener("change", ()=>{
+        const ws = sel.closest(".weight-selects"); const key = ws.dataset.wkey;
+        const l = +ws.querySelector(".wk-likelihood").value, im = +ws.querySelector(".wk-impact").value;
+        rec.weights[key] = {likelihood:l, impact:im};
+        refreshFishboneAndWeights();
+      });
+    });
+  }
+  wireFactorArea();
+
+  document.getElementById("rcaType").addEventListener("change", (e)=>{ rec.type = e.target.value; rec.factors={}; rec.weights={}; refreshFactorArea(); document.getElementById("linkedAuditArea").innerHTML = linkedAuditHtml(); wireLinkedAudit(); });
+  document.getElementById("rcaDate").addEventListener("change", (e)=>{ rec.eventDate = e.target.value; document.getElementById("linkedAuditArea").innerHTML = linkedAuditHtml(); wireLinkedAudit();
+    document.getElementById("vf30").value = addDays(rec.eventDate,30); document.getElementById("vf60").value = addDays(rec.eventDate,60); document.getElementById("vf90").value = addDays(rec.eventDate,90);
+  });
+
+  function wireLinkedAudit(){
+    const btn = document.getElementById("importFailedBtn");
+    if(!btn) return;
+    btn.addEventListener("click", ()=>{
+      const nearest = findNearestAudit(rec.type, rec.eventDate);
+      if(!nearest) return;
+      const failed = failedItemsOf(nearest.auditId, nearest.record);
+      const map = AUDIT_TO_RCA_MAP[nearest.auditId] || {};
+      failed.forEach(txt=>{ const key = map[txt]; if(key) rec.factors[key]=true; });
+      refreshFactorArea();
+      alert("Imported "+failed.length+" failed item(s) where a mapping was available.");
+    });
+  }
+  wireLinkedAudit();
+
+  document.getElementById("addTlBtn").addEventListener("click", ()=>{ rec.timeline.push({when:"",what:""}); refreshTimeline(); });
+  function refreshTimeline(){ document.getElementById("tlRows").innerHTML = timelineRowsHtml(); document.getElementById("tlPreview").innerHTML = timelinePreview(); wireTimeline(); }
+  function wireTimeline(){
+    document.querySelectorAll(".tl-row").forEach(row=>{
+      const i = +row.dataset.i;
+      row.querySelector(".tl-when-in").addEventListener("input", (e)=>{ rec.timeline[i].when = e.target.value; document.getElementById("tlPreview").innerHTML = timelinePreview(); });
+      row.querySelector(".tl-what-in").addEventListener("input", (e)=>{ rec.timeline[i].what = e.target.value; document.getElementById("tlPreview").innerHTML = timelinePreview(); });
+      row.querySelector(".remove-tl").addEventListener("click", ()=>{ rec.timeline.splice(i,1); if(!rec.timeline.length) rec.timeline.push({when:"",what:""}); refreshTimeline(); });
+    });
+  }
+  wireTimeline();
+
+  document.getElementById("addActionBtn").addEventListener("click", ()=>{ rec.actions.push(newActionRow()); document.getElementById("actionRows").innerHTML = actionsHtml(); });
+  wrap.addEventListener("click", (e)=>{ if(e.target.classList.contains("remove-action")){ const i=+e.target.closest(".action-row").dataset.i; rec.actions.splice(i,1); if(!rec.actions.length) rec.actions.push(newActionRow()); document.getElementById("actionRows").innerHTML = actionsHtml(); } });
+
+  document.getElementById("cancelRcaBtn").addEventListener("click", ()=>{ wrap.classList.add("hidden"); wrap.innerHTML=""; });
+
+  document.getElementById("saveRcaBtn").addEventListener("click", ()=>{
+    rec.type = document.getElementById("rcaType").value;
+    rec.refNo = document.getElementById("rcaRef").value;
+    rec.eventDate = document.getElementById("rcaDate").value || todayStr();
+    rec.gaWeeks = document.getElementById("rcaGA").value;
+    rec.cgaAtEvent = document.getElementById("rcaCGA").value;
+    rec.deviceDays = document.getElementById("rcaDeviceDays").value;
+    document.querySelectorAll(".why-input").forEach(inp=>{ rec.whys[+inp.dataset.i] = inp.value; });
+    rec.rootCause = document.getElementById("rcaRootCauseInline").value;
+    rec.contributing = document.getElementById("rcaContributing").value;
+    document.querySelectorAll(".action-row").forEach(row=>{
+      const i = +row.dataset.i;
+      rec.actions[i] = {
+        type: row.querySelector(".act-type").value,
+        action: row.querySelector(".act-action").value,
+        owner: row.querySelector(".act-owner").value,
+        due: row.querySelector(".act-due").value,
+        status: row.querySelector(".act-status").value,
+        evidence: row.querySelector(".act-evidence").value
+      };
+    });
+    rec.followUp = {
+      d30:{date:document.getElementById("vf30").value, done:document.getElementById("vf30done").checked},
+      d60:{date:document.getElementById("vf60").value, done:document.getElementById("vf60done").checked},
+      d90:{date:document.getElementById("vf90").value, done:document.getElementById("vf90done").checked}
+    };
+    rec.followUpNotes = document.getElementById("rcaFollowUpNotes").value;
+    rec.savedAt = nowStr();
+    rec.savedBy = staffInput.value || "(unnamed)";
+
+    let records = LS.get(KEYS.rca, []);
+    const idx = records.findIndex(r=>r.id===rec.id);
+    if(idx>=0) records[idx]=rec; else records.push(rec);
+    LS.set(KEYS.rca, records);
+    pushRow("RCA", {EventDate:rec.eventDate, Type:rec.type, RefNo:rec.refNo||"", RootCause:rec.rootCause||"", OpenActions:(rec.actions||[]).filter(a=>a.status!=="Complete"&&a.status!=="Closed").length, SavedBy:rec.savedBy||"", SavedAt:rec.savedAt||""});
+    renderRcaHistory();
+    wrap.innerHTML = `<div class="module-block">
+      <div class="score-banner pass">RCA saved${rec.refNo? " — "+rec.refNo : ""}. You can print/save it now, or come back to it any time from the RCA history list below.</div>
+      <div class="btn-row">
+        <button class="btn" id="printJustSavedBtn">🖨 Print / Save RCA as PDF</button>
+        <button class="btn ghost" id="doneRcaBtn">Done</button>
+        <button class="btn secondary" id="editAgainBtn">Keep editing</button>
+      </div>
+    </div>`;
+    document.getElementById("printJustSavedBtn").addEventListener("click", ()=> printRca(rec.id));
+    document.getElementById("doneRcaBtn").addEventListener("click", ()=>{ wrap.classList.add("hidden"); wrap.innerHTML=""; });
+    document.getElementById("editAgainBtn").addEventListener("click", ()=> renderRcaForm(rec));
+  });
+}
+
+function printRca(id){
+  const r = LS.get(KEYS.rca, []).find(x=>x.id===id);
+  if(!r) return;
+  const factorsFlat = Object.entries(r.factors||{}).filter(([k,v])=>v).map(([k])=>k.split("|")[1]);
+  const win = window.open("", "_blank");
+  win.document.write(`
+    <html><head><title>RCA Report — ${r.refNo||r.type}</title>
+    <style>
+      body{font-family:Arial,sans-serif; padding:30px; color:#22303c;}
+      h1{font-size:20px;} h2{font-size:15px; margin-top:22px; border-bottom:1px solid #ccc; padding-bottom:4px;}
+      table{border-collapse:collapse; width:100%; margin-top:8px;} td,th{border:1px solid #999; padding:6px 8px; font-size:12px; text-align:left;}
+      .meta span{display:inline-block; margin-right:24px; font-size:13px;}
+      ul,ol{font-size:13px;}
+      .no-print{margin:14px 0;}
+      @media print{ .no-print{display:none;} }
+    </style></head><body>
+    <div class="no-print"><button onclick="window.print()">Print / Save as PDF</button></div>
+    <h1>Root Cause Analysis — ${r.type}${r.refNo? " — "+r.refNo : ""}</h1>
+    <div class="meta">
+      <span><strong>Event date:</strong> ${r.eventDate}</span>
+      <span><strong>GA at birth:</strong> ${r.gaWeeks||"—"} wks</span>
+      <span><strong>Corrected GA at event:</strong> ${r.cgaAtEvent||"—"} wks</span>
+      <span><strong>Device/risk days:</strong> ${r.deviceDays||"—"}</span>
+    </div>
+    <h2>Timeline</h2><ol>${(r.timeline||[]).filter(t=>t.when||t.what).map(t=>`<li><strong>${t.when||"—"}:</strong> ${t.what||""}</li>`).join("") || "<li>—</li>"}</ol>
+    <h2>5 Whys</h2><ol>${r.whys.map(w=>`<li>${w||"—"}</li>`).join("")}</ol>
+    <h2>Contributing Factors Identified</h2><ul>${factorsFlat.length? factorsFlat.map(f=>`<li>${f}</li>`).join("") : "<li>None checked</li>"}</ul>
+    <h2>Root Cause Statement</h2><p>${r.rootCause||"—"}</p>
+    <h2>Additional Notes</h2><p>${r.contributing||"—"}</p>
+    <h2>CAPA — Corrective / Preventive Action Plan</h2>
+    <table><thead><tr><th>Type</th><th>Action</th><th>Owner</th><th>Due</th><th>Status</th><th>Evidence</th></tr></thead><tbody>
+    ${(r.actions||[]).map(a=>`<tr><td>${a.type||"—"}</td><td>${a.action||"—"}</td><td>${a.owner||"—"}</td><td>${a.due||"—"}</td><td>${a.status}</td><td>${a.evidence||"—"}</td></tr>`).join("")}
+    </tbody></table>
+    <h2>Verification Audits</h2>
+    <p>30-day: ${r.followUp? r.followUp.d30.date+(r.followUp.d30.done?" (done)":" (pending)") : "—"} · 60-day: ${r.followUp? r.followUp.d60.date+(r.followUp.d60.done?" (done)":" (pending)") : "—"} · 90-day: ${r.followUp? r.followUp.d90.date+(r.followUp.d90.done?" (done)":" (pending)") : "—"}</p>
+    <p>${r.followUpNotes||""}</p>
+    <p style="margin-top:30px; font-size:11px; color:#777;">Prepared by: ${r.savedBy||"—"} · Saved: ${r.savedAt||"—"}</p>
+    </body></html>
+  `);
+  win.document.close();
+  setTimeout(()=> win.print(), 300);
+}
+function renderResources(){
+  const list = document.getElementById("sourceList");
+  const all = [];
+  MODULES.forEach(m=> m.sources.forEach(s=> all.push(m.name+" — "+s)));
+  list.innerHTML = all.map(s=>`<li>${s}</li>`).join("");
+  const settings = getSettings();
+  document.getElementById("settingTarget").value = settings.target;
+  document.getElementById("settingNational").value = settings.national;
+  document.getElementById("sheetUrlInput").value = getSheetUrl();
+  document.getElementById("appsScriptCode").value = APPS_SCRIPT_CODE;
+  renderSyncLog();
+}
+
+function renderSyncLog(){
+  const wrap = document.getElementById("syncLogWrap");
+  const log = LS.get(KEYS.syncLog, []).slice().reverse().slice(0,20);
+  if(!log.length){ wrap.innerHTML = `<p class="empty-state">No sync attempts yet.</p>`; return; }
+  wrap.innerHTML = `<table class="history"><thead><tr><th>Time</th><th>Sheet tab</th><th>Result</th><th>Note</th></tr></thead><tbody>
+    ${log.map(l=>`<tr><td>${l.at}</td><td>${l.sheet}</td><td>${l.ok?"✅ Sent":"❌ Not sent"}</td><td>${l.note}</td></tr>`).join("")}
+  </tbody></table>`;
+}
+
+document.getElementById("saveSheetUrlBtn").addEventListener("click", ()=>{
+  const url = document.getElementById("sheetUrlInput").value.trim();
+  LS.set(KEYS.sheetUrl, url);
+  alert(url? "Google Sheet Web App URL saved. New certificates and progress will now sync automatically." : "URL cleared — sync is now off.");
+});
+document.getElementById("pushAllNowBtn").addEventListener("click", ()=>{
+  if(!getSheetUrl()){ alert("Save your Apps Script Web App URL first."); return; }
+  const n = pushAllDataNow();
+  alert("Queued "+n+" record(s) to sync. Check the sheet in a moment, and see the activity log below for send status.");
+  setTimeout(renderSyncLog, 500);
+});
+document.getElementById("copyScriptBtn").addEventListener("click", ()=>{
+  const ta = document.getElementById("appsScriptCode");
+  ta.removeAttribute("style-hidden");
+  ta.select();
+  try{ document.execCommand("copy"); alert("Apps Script code copied to clipboard."); }
+  catch(e){ alert("Could not auto-copy — the code is shown above; select and copy manually."); }
+});
+
+document.getElementById("saveSettingsBtn").addEventListener("click", ()=>{
+  const target = +document.getElementById("settingTarget").value || 95;
+  const national = +document.getElementById("settingNational").value || 91;
+  LS.set(KEYS.settings, {target, national});
+  alert("Benchmarks saved.");
+});
+
+document.getElementById("exportAllBtn").addEventListener("click", ()=>{
+  const payload = { exportedAt: nowStr(), pre:{}, post:{}, caseAttempts:{}, cert:{}, reviewed:{}, video:{}, comp: LS.get(KEYS.comp,[]), audit:{}, rca: LS.get(KEYS.rca, []), kpiMonthly: LS.get(KEYS.kpiMonthly, []), settings: getSettings(), sheetUrl: getSheetUrl() };
+  MODULES.forEach(m=>{
+    payload.pre[m.id] = LS.get(KEYS.pre(m.id), []);
+    payload.post[m.id] = LS.get(KEYS.post(m.id), []);
+    payload.caseAttempts[m.id] = LS.get(KEYS.case(m.id), []);
+    payload.cert[m.id] = LS.get(KEYS.cert(m.id), []);
+    payload.reviewed[m.id] = LS.get(KEYS.reviewed(m.id), false);
+    m.videos.forEach((v,i)=>{ payload.video[m.id+"_"+i] = LS.get(KEYS.video(m.id+"_"+i), ""); });
+  });
+  AUDITS.forEach(a=> payload.audit[a.id] = auditHistory(a.id));
+  downloadFile("nicu_infection_prevention_data_"+todayStr()+".json", JSON.stringify(payload,null,2), "application/json");
+});
+
+document.getElementById("importAllBtn").addEventListener("click", ()=> document.getElementById("importFileInput").click());
+document.getElementById("importFileInput").addEventListener("change", (e)=>{
+  const file = e.target.files[0]; if(!file) return;
+  const reader = new FileReader();
+  reader.onload = ()=>{
+    try{
+      const payload = JSON.parse(reader.result);
+      if(payload.pre) Object.entries(payload.pre).forEach(([id,v])=> LS.set(KEYS.pre(id), v));
+      if(payload.post) Object.entries(payload.post).forEach(([id,v])=> LS.set(KEYS.post(id), v));
+      if(payload.caseAttempts) Object.entries(payload.caseAttempts).forEach(([id,v])=> LS.set(KEYS.case(id), v));
+      if(payload.cert) Object.entries(payload.cert).forEach(([id,v])=> LS.set(KEYS.cert(id), v));
+      if(payload.reviewed) Object.entries(payload.reviewed).forEach(([id,v])=> LS.set(KEYS.reviewed(id), v));
+      if(payload.video) Object.entries(payload.video).forEach(([k,v])=> LS.set(KEYS.video(k), v));
+      if(payload.comp) LS.set(KEYS.comp, payload.comp);
+      if(payload.audit) Object.entries(payload.audit).forEach(([id,v])=> LS.set(KEYS.audit(id), v));
+      if(payload.rca) LS.set(KEYS.rca, payload.rca);
+      if(payload.kpiMonthly) LS.set(KEYS.kpiMonthly, payload.kpiMonthly);
+      if(payload.settings) LS.set(KEYS.settings, payload.settings);
+      if(payload.sheetUrl!==undefined) LS.set(KEYS.sheetUrl, payload.sheetUrl);
+      alert("Data imported successfully.");
+      renderDashboard();
+    }catch(err){ alert("Could not read that file — make sure it's a JSON export from this app."); }
+  };
+  reader.readAsText(file);
+});
+
+document.getElementById("resetAllBtn").addEventListener("click", ()=>{
+  if(!confirm("This will permanently erase all learning, competency, audit, RCA, and KPI records stored in this browser. Export a backup first if needed. Continue?")) return;
+  MODULES.forEach(m=>{
+    localStorage.removeItem(KEYS.pre(m.id)); localStorage.removeItem(KEYS.post(m.id));
+    localStorage.removeItem(KEYS.case(m.id)); localStorage.removeItem(KEYS.cert(m.id));
+    localStorage.removeItem(KEYS.reviewed(m.id));
+    m.videos.forEach((v,i)=> localStorage.removeItem(KEYS.video(m.id+"_"+i)));
+  });
+  AUDITS.forEach(a=> localStorage.removeItem(KEYS.audit(a.id)));
+  localStorage.removeItem(KEYS.comp);
+  localStorage.removeItem(KEYS.rca);
+  localStorage.removeItem(KEYS.kpiMonthly);
+  renderDashboard();
+  alert("All data has been reset.");
+});
+
+/* ============================================================
+   INIT
+============================================================ */
+renderDashboard();
+renderModuleGrid();
+renderAuditGrid();
+renderRcaHistory();
+renderResources();
+
+})();
+</script>
+</body>
+</html>
